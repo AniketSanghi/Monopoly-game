@@ -78,5 +78,4 @@ def screen1():
         clock.tick(60)
         
 screen1()
-pygame.quit()
-quit()
+
