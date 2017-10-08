@@ -31,12 +31,9 @@ def screen2():
         message_to_screen("Number of players (1-4) : ", red, 50, 200)
         message_to_screen("Winnning Amount : ", red, 50, 300)
 
-        
-        
         pygame.display.update()
         
                 
-screen2()
 
-pygame.quit()
-quit()
+
+

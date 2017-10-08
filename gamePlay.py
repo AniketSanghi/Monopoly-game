@@ -1,5 +1,6 @@
 import pygame
-from firstpage import button, text_in_box, screen1
+import firstpage
+from secondpage import message_to_screen, screen2
 
 pygame.init()
 
@@ -18,6 +19,7 @@ pygame.display.set_caption("Monopoly")
 pygame.display.update()
 
 firstpage.screen1()
+
 
 
 

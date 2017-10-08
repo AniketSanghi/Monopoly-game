@@ -1,4 +1,5 @@
 import pygame
+import secondpage
 
 
 pygame.init()
@@ -31,8 +32,8 @@ def button(msg,x,y,l,h,ac,ic,function):
     if x < mouse[0] < x+l and y < mouse[1] < y+h:
            pygame.draw.rect(gameDisplay, ac, [x,y,l,h])
            if click[0]==1:
-#                if function == "screen2":
- #                   secondpage.screen2()
+                if function == "screen2":
+                    secondpage.screen2()
                     
 #                if function == "leaderboard":
 #                    leaderboard.leaderboard()
@@ -75,7 +76,7 @@ def screen1():
         
         pygame.display.update()
         clock.tick(60)
-screen1()        
-
+        
+screen1()
 pygame.quit()
 quit()
