@@ -1,5 +1,6 @@
 import pygame
 
+
 pygame.init()
 
 display_width = 1430
@@ -11,7 +12,7 @@ yellow = (255,255,0)
 red = (255,50,0)
 blue = (0,0,255)
 green = (0,255,0)
-
+back = (100,10,100)
 
 clock = pygame.time.Clock()
 
@@ -31,7 +32,8 @@ def button(msg,x,y,l,h,ac,ic,function):
            pygame.draw.rect(gameDisplay, ac, [x,y,l,h])
            if click[0]==1:
 #                if function == "screen2":
-#                    secondpage.screen2()
+ #                   secondpage.screen2()
+                    
 #                if function == "leaderboard":
 #                    leaderboard.leaderboard()
                 if function == "quit1":
@@ -43,7 +45,7 @@ def button(msg,x,y,l,h,ac,ic,function):
     
     
 def text_in_box(text, font):
-    textSurface = font.render(text, True, green)
+    textSurface = font.render(text, True, red)
     return textSurface, textSurface.get_rect()
 def screen1():
     
@@ -62,12 +64,13 @@ def screen1():
         l=200
         h=50
 
-        
-        gameDisplay.fill(yellow)
+        gameDisplay.fill(back)
+        img = pygame.image.load('monopolyimage.png')
+        gameDisplay.blit(img, (200,0))
        
-        button("START",x,y1,l,h,red,blue,"screen2")        
-        button("LEADERBOARD",x,y2,l,h,red,blue,"leaderboard")
-        button("QUIT",x,y3,l,h,red,blue,"quit1")
+        button("START",x,y1,l,h,yellow,blue,"screen2")        
+        button("LEADERBOARD",x,y2,l,h,yellow,blue,"leaderboard")
+        button("QUIT",x,y3,l,h,yellow,blue,"quit1")
 
         
         pygame.display.update()
