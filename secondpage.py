@@ -25,7 +25,7 @@ def screen2():
             if event.type == pygame.QUIT:
                 gameExit = True
         gameDisplay.fill(black)
-        img = pygame.image.load('image.png')
+        img = pygame.image.load('images/image.png')
         gameDisplay.blit(img, (800,200))
         
         message_to_screen("Number of players (1-4) : ", red, 50, 200)

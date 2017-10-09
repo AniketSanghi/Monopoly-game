@@ -66,7 +66,7 @@ def screen1():
         h=50
 
         gameDisplay.fill(back)
-        img = pygame.image.load('monopolyimage.png')
+        img = pygame.image.load('images/monopolyimage.png')
         gameDisplay.blit(img, (200,0))
        
         button("START",x,y1,l,h,yellow,blue,"screen2")        
