@@ -1,4 +1,6 @@
 import pygame
+import functions
+ 
 
 pygame.init()
 
@@ -22,10 +24,7 @@ pygame.display.update()
 
 #def property_sketcher(name, price, )
 
-def addimage(link,x,y):
-     img = pygame.image.load(link)
-     gameDisplay.blit(img, [x,y])
-     pygame.display.update()
+
 
 def mainscreen():
     gameExit = False
@@ -38,19 +37,19 @@ def mainscreen():
         pygame.draw.rect(gameDisplay, white, [0,0,display_height,display_height])
         pygame.draw.rect(gameDisplay, maroon, [card_length,card_length,display_height-2*card_length,display_height-2*card_length])
 
-        addimage('images/go.png',display_height-card_length,display_height-card_length)
-        addimage('images/gotojail.png',display_height-card_length,0)
-        addimage('images/parking.png',0,0)
-        addimage('images/jail.png',0,display_height-card_length)
-        addimage('images/chance1.png',card_length+2*card_breadth,display_height-card_length)
-        addimage('images/chance3.png',display_height-card_length,card_length+5*card_breadth)
-        addimage('images/chance2.png',card_breadth+card_length,0)
-        addimage('images/commChest1.png',7*card_breadth+card_length,display_height-card_length)
-        addimage('images/commChest2.png',0,2*card_breadth+card_length)
-        addimage('images/commChest2.png',display_height-card_length,2*card_breadth+card_length)
-        addimage('images/water.png',7*card_breadth+card_length,0)
-        addimage('images/elec.png',0,7*card_breadth+card_length)
-        addimage('images/luxury.png',display_height-card_length,7*card_breadth+card_length)
-        addimage('images/income.png',card_length+5*card_breadth,display_height-card_length)
+        functions.addimage('images/go.png',display_height-card_length,display_height-card_length)
+        functions.addimage('images/gotojail.png',display_height-card_length,0)
+        functions.addimage('images/parking.png',0,0)
+        functions.addimage('images/jail.png',0,display_height-card_length)
+        functions.addimage('images/chance1.png',card_length+2*card_breadth,display_height-card_length)
+        functions.addimage('images/chance3.png',display_height-card_length,card_length+5*card_breadth)
+        functions.addimage('images/chance2.png',card_breadth+card_length,0)
+        functions.addimage('images/commChest1.png',7*card_breadth+card_length,display_height-card_length)
+        functions.addimage('images/commChest2.png',0,2*card_breadth+card_length)
+        functions.addimage('images/commChest2.png',display_height-card_length,2*card_breadth+card_length)
+        functions.addimage('images/water.png',7*card_breadth+card_length,0)
+        functions.addimage('images/elec.png',0,7*card_breadth+card_length)
+        functions.addimage('images/luxury.png',display_height-card_length,7*card_breadth+card_length)
+        functions.addimage('images/income.png',card_length+5*card_breadth,display_height-card_length)
 
 

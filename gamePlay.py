@@ -1,5 +1,5 @@
 import pygame
-import firstpage,secondpage,mainboard
+import firstpage
 
 pygame.init()
 
