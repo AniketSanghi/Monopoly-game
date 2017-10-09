@@ -53,4 +53,4 @@ def mainscreen():
         addimage('images/luxury.png',display_height-card_length,7*card_breadth+card_length)
         addimage('images/income.png',card_length+5*card_breadth,display_height-card_length)
 
-mainscreen()
+

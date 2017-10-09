@@ -1,6 +1,5 @@
 import pygame
-import firstpage
-from secondpage import message_to_screen, screen2
+import firstpage,secondpage,mainboard
 
 pygame.init()
 
@@ -13,6 +12,7 @@ yellow = (255,255,0)
 red = (255,50,0)
 blue = (0,0,255)
 green = (0,255,0)
+back = (100,10,100)
 
 gameDisplay = pygame.display.set_mode((display_width,display_height))
 pygame.display.set_caption("Monopoly")

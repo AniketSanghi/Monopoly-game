@@ -2,6 +2,7 @@ import pygame
 import secondpage
 
 
+
 pygame.init()
 
 display_width = 1430
@@ -34,7 +35,8 @@ def button(msg,x,y,l,h,ac,ic,function):
            if click[0]==1:
                 if function == "screen2":
                     secondpage.screen2()
-                    
+                if function == "next":
+                    mainboard.mainscreen()
 #                if function == "leaderboard":
 #                    leaderboard.leaderboard()
                 if function == "quit1":
@@ -77,5 +79,5 @@ def screen1():
         pygame.display.update()
         clock.tick(60)
         
-screen1()
+
 
