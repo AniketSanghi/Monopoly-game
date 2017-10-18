@@ -1,4 +1,4 @@
-import pygame
+import pygame,random
 import secondpage,mainboard
 
 pygame.init()
@@ -26,7 +26,7 @@ def addimage(link,x,y):
      gameDisplay.blit(img, [x,y])
      pygame.display.update()
 
-def button(msg,x,y,l,h,ac,ic,function):
+def button(msg,x,y,l,h,ac,ic,function,tc):
     
     pygame.draw.rect(gameDisplay, ic, [x,y,l,h])
     mouse = pygame.mouse.get_pos()
@@ -39,22 +39,30 @@ def button(msg,x,y,l,h,ac,ic,function):
                     secondpage.screen2()
                 if function == "next":
                     mainboard.mainscreen()
+
+                if function == "roll":
+                     mainboard.move()
 #                if function == "leaderboard":
 #                    leaderboard.leaderboard()
                 if function == "quit1":
                     quit()
     _font = pygame.font.Font('freesansbold.ttf',20)
-    textSurface, textRect = text_in_box(msg, _font)
+    text_in_box(msg, _font,tc,x,y,l,h)
+   
+
+def text_in_box(text, font,tc,x,y,l,h):
+    textSurface = font.render(text, True, tc)
+    textRect = textSurface.get_rect()
     textRect.center = (x+l/2,y+h/2)
     gameDisplay.blit(textSurface, textRect)
 
-def text_in_box(text, font):
-    textSurface = font.render(text, True, red)
-    return textSurface, textSurface.get_rect()
-
-def message_to_screen(msg, color,x,y):
-    font = pygame.font.SysFont(None, 25)
+def message_to_screen(msg, color,x,y,s):
+    font = pygame.font.SysFont(None, s)
     screen_text = font.render(msg, True, color)
     gameDisplay.blit(screen_text, [x,y])
 
+def rolldice():
+     a = random.randrange(1,7)
+     b = random.randrange(1,7)
+     return a+b
 

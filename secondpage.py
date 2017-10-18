@@ -11,9 +11,7 @@ back = (100,10,100)
 display_width = 1430
 display_height = 800
 
-gameDisplay = pygame.display.set_mode((display_width,display_height))
-pygame.display.set_caption("Monopoly")
-pygame.display.update()
+
 
    
 
@@ -25,14 +23,14 @@ def screen2():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 gameExit = True
-        gameDisplay.fill(black)
+        functions.gameDisplay.fill(black)
         img = pygame.image.load('images/image.png')
-        gameDisplay.blit(img, (800,200))
+        functions.gameDisplay.blit(img, (800,200))
         
-        functions.message_to_screen("Number of players (1-4) : ", red, 50, 200)
-        functions.message_to_screen("Winnning Amount : ", red, 50, 300)
+        functions.message_to_screen("Number of players (1-4) : ", red, 50, 200,40)
+        functions.message_to_screen("Winnning Amount : ", red, 50, 300,40)
 
-        functions.button("NEXT",300,600,200,50,yellow,back,"next")
+        functions.button("NEXT",300,600,200,50,yellow,back,"next",red)
 
         pygame.display.update()
         
