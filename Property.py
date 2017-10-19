@@ -12,9 +12,11 @@ black = (0,0,0)
 yellow = (255,255,0)
 red = (255,50,0)
 blue = (0,0,255)
-green = (0,255,0)
+green = (50,255,50)
 back = (100,10,100)
-
+new = (10,100,100)
+new1 = (200,150,50)
+new2 = (67,234,169)
 clock = pygame.time.Clock()
 
 
@@ -38,29 +40,33 @@ class Property():
         self.owner = None
     
     def locmaker(self):
-        lfont = pygame.font.Font('freesansbold.ttf',13)
+        lfont = pygame.font.Font('freesansbold.ttf',10)
         if self.locx == card_length/2:
             pygame.draw.rect(functions.gameDisplay,black,[0,self.locy-card_breadth/2,card_length,card_breadth],1)
-            functions.text_in_box(self.name,lfont,self.color,0,self.locy-card_breadth/2,0.7*card_length,card_breadth)
+            functions.text_in_box(self.name,lfont,black,0,self.locy-card_breadth/2,0.7*card_length,card_breadth)
             functions.gameDisplay.fill(self.color, rect = [0.7*card_length,self.locy-card_breadth/2,0.3*card_length,card_breadth])
         elif self.locx == display_height -  card_length/2:
             pygame.draw.rect(functions.gameDisplay,black,[display_height -  card_length,self.locy-card_breadth/2,card_length,card_breadth],1)
-            functions.text_in_box(self.name,lfont,self.color,display_height -  0.7*card_length,self.locy-card_breadth/2,0.7*card_length,card_breadth)
+            functions.text_in_box(self.name,lfont,black,display_height -  0.7*card_length,self.locy-card_breadth/2,0.7*card_length,card_breadth)
             functions.gameDisplay.fill(self.color, rect = [display_height -  card_length,self.locy-card_breadth/2,0.3*card_length,card_breadth])
         elif self.locy == card_length/2:
             pygame.draw.rect(functions.gameDisplay,black,[self.locx-card_breadth/2,0,card_breadth,card_length],1)
-            functions.text_in_box(self.name,lfont,self.color,self.locx-card_breadth/2,0,card_breadth,0.7*card_length)
+            a = self.name.split(' ')
+            temp = 0
+            for x in a:
+                functions.text_in_box(x,lfont,black,self.locx-card_breadth/2,temp,card_breadth,0.35*card_length)
+                temp += 0.35*card_length
             functions.gameDisplay.fill(self.color, rect = [self.locx-card_breadth/2,0.7*card_length,card_breadth,0.3*card_length])
         elif self.locy ==  display_height -  card_length/2:
             pygame.draw.rect(functions.gameDisplay,black,[self.locx-card_breadth/2,display_height -  card_length,card_breadth,card_length],1)
-            functions.text_in_box(self.name,lfont,self.color,self.locx-card_breadth/2,display_height -  0.7*card_length,card_breadth,0.7*card_length)
+            functions.text_in_box(self.name,lfont,black,self.locx-card_breadth/2,display_height -  0.7*card_length,card_breadth,0.7*card_length)
             functions.gameDisplay.fill(self.color, rect = [self.locx-card_breadth/2,display_height -  card_length,card_breadth,0.3*card_length])
         pygame.display.update() 
 
     def card(self):
         functions.gameDisplay.fill(white, rect = [170,400,200,250])
         lfont = pygame.font.Font('freesansbold.ttf',25)
-        functions.text_in_box(self.name,lfont,black,170,410,200,30)
+        functions.text_in_box(self.name,lfont,self.color,170,410,200,30)
         functions.message_to_screen("Cost: $ %d"%self.cost,black,180,460,20)
         functions.message_to_screen("Rent: $ %d"%self.rent,black,180,480,20)
         functions.message_to_screen("1st floor: $ %d"%self.house1,black,180,500,20)
@@ -71,10 +77,28 @@ class Property():
         pygame.display.update()
 
 
-_property = { "delhi":Property("Delhi",red,"India",card_length + card_breadth/2,card_length/2,50000)
+_property = { "delhi":Property("Delhi",red,"India",card_length + card_breadth/2,card_length/2,80000)
             , "mumbai":Property("Mumbai",red,"India",card_length + 5*(card_breadth/2),card_length/2,60000)
             , "banglore":Property("Banglore",red,"India",card_length + 7*(card_breadth/2),card_length/2,40000)  
-           
+            , "newyork":Property("New York",yellow,"America",card_length + 11*(card_breadth/2),card_length/2,70000)
+            , "washingtondc":Property("Washington D.C.",yellow,"America",card_length + 13*(card_breadth/2),card_length/2,40000)
+            , "sanfrancisco":Property("San Francisco",yellow,"America",card_length + 17*(card_breadth/2),card_length/2,60000)
+            , "london":Property("London",blue,"England",display_height -  card_length/2,card_length + 1*(card_breadth/2),80000)
+            , "manchester":Property("Manchester",blue,"England",display_height -  card_length/2,card_length + 3*(card_breadth/2),30000)
+            , "oxford":Property("Oxford",blue,"England",display_height -  card_length/2,card_length + 7*(card_breadth/2),40000)
+            , "melbourne":Property("Melbourne",green,"Australia",card_length/2,card_length + 1*(card_breadth/2),40000)
+            , "canberra":Property("Canberra",green,"Australia",card_length/2,card_length + 3*(card_breadth/2),50000)           
+            , "sydney":Property("Sydney",green,"Australia",card_length/2,card_length + 7*(card_breadth/2),70000)
+            , "tokyo":Property("Tokyo",back,"Japan",card_length/2,card_length + 11*(card_breadth/2),70000)
+            , "osaka":Property("Osaka",back,"Japan",card_length/2,card_length + 13*(card_breadth/2),50000)
+            , "hiroshima":Property("Hiroshima",back,"Japan",card_length/2,card_length + 17*(card_breadth/2),30000)
+            , "beijing":Property("Beijing",new,"China",card_length + 1*(card_breadth/2),display_height - card_length/2,50000)
+            , "hongkong":Property("Hong Kong",new,"China",card_length + 3*(card_breadth/2),display_height - card_length/2,40000)
+            , "shanghai":Property("Shanghai",new,"China",card_length + 7*(card_breadth/2),display_height - card_length/2,60000)
+            , "moscow":Property("Moscow",new1,"Russia",display_height - card_length/2,card_length + 13*(card_breadth/2),60000)
+            , "saintpetersburg":Property("Saint Petersberg",new1,"Russia",display_height - card_length/2,card_length + 17*(card_breadth/2),40000)
+            , "capetown":Property("Cape Town",new2,"SouthAfrica",card_length + 13*(card_breadth/2),display_height - card_length/2,80000)
+            , "durban":Property("Durban",new2,"SouthAfrica",card_length + 17*(card_breadth/2),display_height - card_length/2,60000)              
             }
 
         

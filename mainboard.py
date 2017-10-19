@@ -60,23 +60,54 @@ def drawing():
             functions.addimage('images/luxury.png',display_height-card_length,7*card_breadth+card_length)
             functions.addimage('images/income.png',card_length+5*card_breadth,display_height-card_length)
 
-            functions.button("ROLE DICE",(display_height-blockl)/2,(display_height/2+card_length)/2 - 2*blockh,blockl,blockh,yellow,llblue,"roll",red)
+            Button("ROLE DICE",(display_height-blockl)/2,(display_height/2+card_length)/2 - 2*blockh,blockl,blockh,yellow,llblue,"roll",red)
 
             Property._property["delhi"].locmaker()
             Property._property["mumbai"].locmaker()
             Property._property["banglore"].locmaker()
+            Property._property["newyork"].locmaker()
+            Property._property["washingtondc"].locmaker()
+            Property._property["sanfrancisco"].locmaker()
+            Property._property["london"].locmaker()
+            Property._property["manchester"].locmaker()
+            Property._property["oxford"].locmaker()
+            Property._property["melbourne"].locmaker()
+            Property._property["canberra"].locmaker()
+            Property._property["sydney"].locmaker()
+            Property._property["tokyo"].locmaker()
+            Property._property["osaka"].locmaker()
+            Property._property["hiroshima"].locmaker()
+            Property._property["beijing"].locmaker()
+            Property._property["hongkong"].locmaker()
+            Property._property["shanghai"].locmaker()
+            Property._property["moscow"].locmaker()
+            Property._property["saintpetersburg"].locmaker()
+            Property._property["capetown"].locmaker()
+            Property._property["durban"].locmaker()
+            
             player.player[1].draw()
             player.player[0].draw()
 
             pygame.display.update()       
-def move():
-        n = functions.rolldice()
-        while n>0:
-            drawing()
-            player.player[0].movement()
-            player.player[1].draw()
-            pygame.display.update()
-            n = n-1
- 
-        mainscreen()
-
+#def move():
+#        n = functions.rolldice()
+#        while n>0:
+#            drawing()
+#            player.player[0].movement()
+#            player.player[1].draw()
+#            pygame.display.update()
+#            n = n-1
+#        mainscreen()
+#
+def Button(msg,x,y,l,h,ac,ic,function,tc):
+            pygame.draw.rect(functions.gameDisplay, ic, [x,y,l,h])
+            mouse = pygame.mouse.get_pos()
+            click = pygame.mouse.get_pressed()
+            if x < mouse[0] < x+l and y < mouse[1] < y+h:
+                pygame.draw.rect(functions.gameDisplay, ac, [x,y,l,h])
+                if click[0]==1:
+                    if function == "roll":
+                        n = functions.rolldice()
+                        player.player[0].movement(n)
+            _font = pygame.font.Font('freesansbold.ttf',20)
+            functions.text_in_box(msg, _font,tc,x,y,l,h)

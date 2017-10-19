@@ -1,5 +1,6 @@
 import pygame,random
-import secondpage,mainboard
+import secondpage
+import mainboard
 
 pygame.init()
 
@@ -40,8 +41,7 @@ def button(msg,x,y,l,h,ac,ic,function,tc):
                 if function == "next":
                     mainboard.mainscreen()
 
-                if function == "roll":
-                     mainboard.move()
+                
 #                if function == "leaderboard":
 #                    leaderboard.leaderboard()
                 if function == "quit1":

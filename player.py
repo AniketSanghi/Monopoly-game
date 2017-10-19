@@ -42,8 +42,8 @@ class Player:
             pygame.display.update()        
     
         
-    def movement(self):
-        
+    def movement(self,n):
+        while n>0:
             if card_length+card_breadth/2<self.posx < display_height-card_length/2 and self.posy == display_height-card_length/2:
                 self.posx -= card_breadth
             elif card_length/2<self.posx < display_height-(card_length+card_breadth/2) and self.posy == card_length/2:
@@ -68,14 +68,6 @@ class Player:
                 self.posy += (card_breadth+card_length)/2
             elif self.posx == card_length/2  and self.posy ==  card_length+card_breadth/2:
                 self.posy -= (card_breadth+card_length)/2    
-                
-            
-            _font = pygame.font.Font('freesansbold.ttf',20)
-            pygame.draw.circle(functions.gameDisplay,self.color,[(int)(self.posx),(int)(self.posy)],20)
-            textSurface = _font.render(self.no, True, black)
-            textRect = textSurface.get_rect()
-            textRect.center = (self.posx,self.posy)
-            gameDisplay.blit(textSurface, textRect)
-            pygame.display.update()
+            n-=1
             
 player = [Player(blue,'1'),Player(red,'2')]
