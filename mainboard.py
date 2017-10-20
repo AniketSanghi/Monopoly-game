@@ -23,8 +23,12 @@ maroon = (100,10,100)
 grey = (160,160,160)
 orange = (228,142,88)
 
+player_index = 0
+rollonce = 0
+#card_display = 0
+#place
 
-
+clock = pygame.time.Clock()
 
 
 def mainscreen():
@@ -37,13 +41,14 @@ def mainscreen():
         
         
         drawing()
-            
+        clock.tick(15)    
                 
            
 def drawing():        
             functions.gameDisplay.fill(lblue)
             pygame.draw.rect(functions.gameDisplay, white, [0,0,display_height,display_height])
             functions.addimage('images/back.png',card_length,card_length)
+            _font = pygame.font.Font('freesansbold.ttf',20)
 
             functions.addimage('images/go.png',display_height-card_length,display_height-card_length)
             functions.addimage('images/gotojail.png',display_height-card_length,0)
@@ -60,7 +65,11 @@ def drawing():
             functions.addimage('images/luxury.png',display_height-card_length,7*card_breadth+card_length)
             functions.addimage('images/income.png',card_length+5*card_breadth,display_height-card_length)
 
-            Button("ROLE DICE",(display_height-blockl)/2,(display_height/2+card_length)/2 - 2*blockh,blockl,blockh,yellow,llblue,"roll",red)
+            functions.text_in_box("Player %r's turn "%(player_index+1),_font,blue,card_length,card_length,display_height-2*card_length,blockh)
+
+            Button("ROLE DICE",(display_height-blockl)/2,(display_height/2+card_length)/2 - 1.25*blockh,blockl,blockh,yellow,llblue,"roll",red)
+            Button("END TURN",(display_height-blockl)/2,(display_height/2+card_length)/2 + 0.25*blockh,blockl,blockh,yellow,llblue,"endturn",red)
+            
 
             Property._property["delhi"].locmaker()
             Property._property["mumbai"].locmaker()
@@ -84,30 +93,39 @@ def drawing():
             Property._property["saintpetersburg"].locmaker()
             Property._property["capetown"].locmaker()
             Property._property["durban"].locmaker()
+            #if card_display == 1:
+#                Property._property[place].card()
+                
             
             player.player[1].draw()
             player.player[0].draw()
 
             pygame.display.update()       
-#def move():
-#        n = functions.rolldice()
-#        while n>0:
-#            drawing()
-#            player.player[0].movement()
-#            player.player[1].draw()
-#            pygame.display.update()
-#            n = n-1
-#        mainscreen()
-#
+
 def Button(msg,x,y,l,h,ac,ic,function,tc):
+            global player_index,place,card_display
+            global rollonce 
             pygame.draw.rect(functions.gameDisplay, ic, [x,y,l,h])
             mouse = pygame.mouse.get_pos()
             click = pygame.mouse.get_pressed()
             if x < mouse[0] < x+l and y < mouse[1] < y+h:
                 pygame.draw.rect(functions.gameDisplay, ac, [x,y,l,h])
                 if click[0]==1:
-                    if function == "roll":
+                    if function == "roll" and rollonce == 0:
                         n = functions.rolldice()
-                        player.player[0].movement(n)
+                        player.player[player_index].movement(n)
+                        rollonce = 1
+ #                           for place in Property._property:
+#                                if Property._property[place].locx == player.player[player_index].posx and Property._property[place].locy == player.player[player_index].posy:
+#                                    card_display = 1
+                           
+                            
+                    if function == "endturn":
+                        if player_index == 0:
+                            player_index+=1
+                        elif player_index == 1:
+                            player_index-=1
+                        rollonce = 0
+                        
             _font = pygame.font.Font('freesansbold.ttf',20)
             functions.text_in_box(msg, _font,tc,x,y,l,h)
