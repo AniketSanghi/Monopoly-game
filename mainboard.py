@@ -25,8 +25,11 @@ orange = (228,142,88)
 
 player_index = 0
 rollonce = 0
-#card_display = 0
-#place
+card_display = 0
+endturn = 0
+key = 0
+place = " "
+timer = 5
 
 clock = pygame.time.Clock()
 
@@ -44,7 +47,8 @@ def mainscreen():
         clock.tick(15)    
                 
            
-def drawing():        
+def drawing():
+            global key,timer
             functions.gameDisplay.fill(lblue)
             pygame.draw.rect(functions.gameDisplay, white, [0,0,display_height,display_height])
             functions.addimage('images/back.png',card_length,card_length)
@@ -93,10 +97,47 @@ def drawing():
             Property._property["saintpetersburg"].locmaker()
             Property._property["capetown"].locmaker()
             Property._property["durban"].locmaker()
-            #if card_display == 1:
-#                Property._property[place].card()
+
+            if card_display == 1:
                 
-            
+                Property._property[place].card()
+                __font = pygame.font.Font('freesansbold.ttf',15)
+                if Property._property[place].owner != None and key == 0:
+                    if Property._property[place].no_of_houses == 0:
+                        rent_paid = Property._property[place].rent
+                    if Property._property[place].no_of_houses == 1:
+                        rent_paid = Property._property[place].house1
+                    if Property._property[place].no_of_houses == 2:
+                        rent_paid = Property._property[place].house2
+                    if Property._property[place].no_of_houses == 3:
+                        rent_paid = Property._property[place].house3
+                    if Property._property[place].no_of_houses == 4:
+                        rent_paid = Property._property[place].hotel
+                    player.player[player_index].cash -= rent_paid
+                    player.player[player_index].total_wealth -= rent_paid
+                    player.player[Property._property[place].owner].cash += rent_paid
+                    player.player[Property._property[place].owner].total_wealth += rent_paid
+                    functions.text_in_box("You paid rent of %r to player %r?"%(rent_paid,Property._property[place].owner+1),__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+                    timer -= 1
+                    if timer == 0:
+                        key = 1
+                        timer = 5
+
+                if Property._property[place].owner == None and key == 0:    
+                    functions.text_in_box("Do you want to purchase %r ?"%Property._property[place].name,__font,orange,display_height/2,display_height/2 - blockh,display_height/2-card_length,display_height/2-card_length)
+                    Button("YES",display_height*3/4 - card_length/2-blockl,display_height*3/4 - card_length/2 + blockh/2,blockl/2,blockh,yellow,llblue,"yes",red)
+                    Button("NO",display_height*3/4 - card_length/2 + blockl/2,display_height*3/4 - card_length/2 + blockh/2,blockl/2,blockh,yellow,llblue,"no",red)
+
+                        
+
+                if key == 2:
+                    functions.text_in_box("Successfully purchased %r"%(Property._property[place].name),__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+                    timer -= 1
+                    if timer == 0:
+                        key = 1
+                        timer = 5
+
+                    
             player.player[1].draw()
             player.player[0].draw()
 
@@ -104,7 +145,7 @@ def drawing():
 
 def Button(msg,x,y,l,h,ac,ic,function,tc):
             global player_index,place,card_display
-            global rollonce 
+            global rollonce,endturn,key 
             pygame.draw.rect(functions.gameDisplay, ic, [x,y,l,h])
             mouse = pygame.mouse.get_pos()
             click = pygame.mouse.get_pressed()
@@ -115,17 +156,27 @@ def Button(msg,x,y,l,h,ac,ic,function,tc):
                         n = functions.rolldice()
                         player.player[player_index].movement(n)
                         rollonce = 1
- #                           for place in Property._property:
-#                                if Property._property[place].locx == player.player[player_index].posx and Property._property[place].locy == player.player[player_index].posy:
-#                                    card_display = 1
-                           
+                        for tplace,tempo in Property._property.items():
+                            if Property._property[tplace].locx == player.player[player_index].posx and Property._property[tplace].locy == player.player[player_index].posy:
+                                card_display = 1
+                                key = 0
+                                place = tplace
+                        endturn = 0   
                             
-                    if function == "endturn":
+                    if function == "endturn" and endturn == 0:
                         if player_index == 0:
                             player_index+=1
                         elif player_index == 1:
                             player_index-=1
                         rollonce = 0
+                        card_display = 0
+                        endturn = 1
+                    if function == "yes":
+                        player.player[player_index].cash -= Property._property[place].cost
+                        Property._property[place].owner = player_index
+                        player.player[player_index].properties.append(place)
+                        key = 2
                         
+                            
             _font = pygame.font.Font('freesansbold.ttf',20)
             functions.text_in_box(msg, _font,tc,x,y,l,h)

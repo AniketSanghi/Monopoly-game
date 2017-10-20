@@ -30,11 +30,11 @@ class Property():
         self.locx = locx
         self.locy = locy
         self.cost = cost
-        self.rent = 0.01*self.cost
-        self.house1 = 0.1*self.cost
-        self.house2 = 0.2*self.cost
-        self.house3 = 0.3*self.cost
-        self.hotel = 0.5*self.cost
+        self.rent = 0.1*self.cost
+        self.house1 = 0.4*self.cost
+        self.house2 = 0.5*self.cost
+        self.house3 = 0.6*self.cost
+        self.hotel = self.cost
         self.mortgage = 0.4*self.cost
         self.no_of_houses = 0
         self.owner = None
