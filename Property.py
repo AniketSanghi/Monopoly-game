@@ -17,6 +17,9 @@ back = (100,10,100)
 new = (10,100,100)
 new1 = (200,150,50)
 new2 = (67,234,169)
+orange = (228,142,88)
+grey = (160,160,160)
+
 clock = pygame.time.Clock()
 
 
@@ -95,10 +98,10 @@ _property = { "delhi":Property("Delhi",red,"India",card_length + card_breadth/2,
             , "beijing":Property("Beijing",new,"China",card_length + 1*(card_breadth/2),display_height - card_length/2,50000)
             , "hongkong":Property("Hong Kong",new,"China",card_length + 3*(card_breadth/2),display_height - card_length/2,40000)
             , "shanghai":Property("Shanghai",new,"China",card_length + 7*(card_breadth/2),display_height - card_length/2,60000)
-            , "moscow":Property("Moscow",new1,"Russia",display_height - card_length/2,card_length + 13*(card_breadth/2),60000)
-            , "saintpetersburg":Property("Saint Petersberg",new1,"Russia",display_height - card_length/2,card_length + 17*(card_breadth/2),40000)
-            , "capetown":Property("Cape Town",new2,"SouthAfrica",card_length + 13*(card_breadth/2),display_height - card_length/2,80000)
-            , "durban":Property("Durban",new2,"SouthAfrica",card_length + 17*(card_breadth/2),display_height - card_length/2,60000)              
+            , "moscow":Property("Moscow",grey,"Russia",display_height - card_length/2,card_length + 13*(card_breadth/2),60000)
+            , "saintpetersburg":Property("Saint Petersberg",grey,"Russia",display_height - card_length/2,card_length + 17*(card_breadth/2),40000)
+            , "capetown":Property("Cape Town",orange,"SouthAfrica",card_length + 13*(card_breadth/2),display_height - card_length/2,80000)
+            , "durban":Property("Durban",orange,"SouthAfrica",card_length + 17*(card_breadth/2),display_height - card_length/2,60000)              
             }
 
         

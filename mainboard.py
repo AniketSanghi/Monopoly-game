@@ -10,6 +10,10 @@ card_length = 130
 card_breadth = 60
 blockl = 120
 blockh = 50
+boxl = 350
+boxb = 215
+gapv = (display_height - 2*boxl)/3
+gaph = (display_width - display_height - 2*boxb)/3
 
 white = (255,255,255)
 black = (0,0,0)
@@ -53,6 +57,10 @@ def drawing():
             pygame.draw.rect(functions.gameDisplay, white, [0,0,display_height,display_height])
             functions.addimage('images/back.png',card_length,card_length)
             _font = pygame.font.Font('freesansbold.ttf',20)
+
+            pygame.draw.rect(functions.gameDisplay,white, [display_height + gaph,gapv,boxb,boxl])
+            pygame.draw.rect(functions.gameDisplay,white, [display_height + gaph,boxl + 2*gapv,boxb,boxl])
+            
 
             functions.addimage('images/go.png',display_height-card_length,display_height-card_length)
             functions.addimage('images/gotojail.png',display_height-card_length,0)
@@ -102,22 +110,23 @@ def drawing():
                 
                 Property._property[place].card()
                 __font = pygame.font.Font('freesansbold.ttf',15)
-                if Property._property[place].owner != None and key == 0:
+                if Property._property[place].owner != None and key == 0 and player_index != Property._property[place].owner:
                     if Property._property[place].no_of_houses == 0:
                         rent_paid = Property._property[place].rent
-                    if Property._property[place].no_of_houses == 1:
+                    elif Property._property[place].no_of_houses == 1:
                         rent_paid = Property._property[place].house1
-                    if Property._property[place].no_of_houses == 2:
+                    elif Property._property[place].no_of_houses == 2:
                         rent_paid = Property._property[place].house2
-                    if Property._property[place].no_of_houses == 3:
+                    elif Property._property[place].no_of_houses == 3:
                         rent_paid = Property._property[place].house3
-                    if Property._property[place].no_of_houses == 4:
+                    elif Property._property[place].no_of_houses == 4:
                         rent_paid = Property._property[place].hotel
-                    player.player[player_index].cash -= rent_paid
-                    player.player[player_index].total_wealth -= rent_paid
-                    player.player[Property._property[place].owner].cash += rent_paid
-                    player.player[Property._property[place].owner].total_wealth += rent_paid
-                    functions.text_in_box("You paid rent of %r to player %r?"%(rent_paid,Property._property[place].owner+1),__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+                    if timer == 5:
+                        player.player[player_index].cash -= rent_paid
+                        player.player[player_index].total_wealth -= rent_paid
+                        player.player[Property._property[place].owner].cash += rent_paid
+                        player.player[Property._property[place].owner].total_wealth += rent_paid
+                        functions.text_in_box("You paid rent of %r to player %r?"%(rent_paid,Property._property[place].owner+1),__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
                     timer -= 1
                     if timer == 0:
                         key = 1
@@ -140,6 +149,13 @@ def drawing():
                     
             player.player[1].draw()
             player.player[0].draw()
+
+            functions.text_in_box("Player 1",_font,maroon,display_height + gaph,gapv,boxb,0.1*boxl)
+            functions.text_in_box("Cash %r"%player.player[0].cash,_font,maroon,display_height + gaph,gapv + 0.1*boxl ,boxb,0.1*boxl)
+            functions.text_in_box("Net Worth %r"%player.player[0].total_wealth,_font,maroon,display_height + gaph,gapv+0.9*boxl,boxb,0.1*boxl)
+            functions.text_in_box("Player 2",_font,maroon,display_height + gaph,2*gapv + boxl,boxb,0.1*boxl)
+            functions.text_in_box("Cash %r"%player.player[1].cash,_font,maroon,display_height + gaph,2*gapv+boxl + 0.1*boxl ,boxb,0.1*boxl)
+            functions.text_in_box("Net Worth %r"%player.player[1].total_wealth,_font,maroon,display_height + gaph,2*gapv+boxl+0.9*boxl,boxb,0.1*boxl)
 
             pygame.display.update()       
 
