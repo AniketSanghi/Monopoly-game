@@ -33,7 +33,7 @@ card_display = 0
 endturn = 0
 key = 0
 place = " "
-timer = 5
+timer = 8
 
 clock = pygame.time.Clock()
 
@@ -81,7 +81,7 @@ def drawing():
 
             Button("ROLE DICE",(display_height-blockl)/2,(display_height/2+card_length)/2 - 1.25*blockh,blockl,blockh,yellow,llblue,"roll",red)
             Button("END TURN",(display_height-blockl)/2,(display_height/2+card_length)/2 + 0.25*blockh,blockl,blockh,yellow,llblue,"endturn",red)
-            
+            Button("BUILD",(display_height-3*blockl)/2 - 0.2*blockl,(display_height/2+card_length)/2 - 0.5*blockh,blockl,blockh,yellow,llblue,"build",red)
 
             Property._property["delhi"].locmaker()
             Property._property["mumbai"].locmaker()
@@ -108,9 +108,10 @@ def drawing():
 
             if card_display == 1:
                 
-                Property._property[place].card()
+                
                 __font = pygame.font.Font('freesansbold.ttf',15)
                 if Property._property[place].owner != None and key == 0 and player_index != Property._property[place].owner:
+                    Property._property[place].card()
                     if Property._property[place].no_of_houses == 0:
                         rent_paid = Property._property[place].rent
                     elif Property._property[place].no_of_houses == 1:
@@ -130,9 +131,10 @@ def drawing():
                     timer -= 1
                     if timer == 0:
                         key = 1
-                        timer = 5
+                        timer = 8
 
-                if Property._property[place].owner == None and key == 0:    
+                if Property._property[place].owner == None and key == 0:
+                    Property._property[place].card()
                     functions.text_in_box("Do you want to purchase %r ?"%Property._property[place].name,__font,orange,display_height/2,display_height/2 - blockh,display_height/2-card_length,display_height/2-card_length)
                     Button("YES",display_height*3/4 - card_length/2-blockl,display_height*3/4 - card_length/2 + blockh/2,blockl/2,blockh,yellow,llblue,"yes",red)
                     Button("NO",display_height*3/4 - card_length/2 + blockl/2,display_height*3/4 - card_length/2 + blockh/2,blockl/2,blockh,yellow,llblue,"no",red)
@@ -140,15 +142,19 @@ def drawing():
                         
 
                 if key == 2:
+                    Property._property[place].card()
                     functions.text_in_box("Successfully purchased %r"%(Property._property[place].name),__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
                     timer -= 1
                     if timer == 0:
                         key = 1
-                        timer = 5
+                        timer = 8
 
                     
             player.player[1].draw()
             player.player[0].draw()
+
+            for item,tempo in Property._property.items():
+                Property._property[item].squares()
 
             functions.text_in_box("Player 1",_font,maroon,display_height + gaph,gapv,boxb,0.1*boxl)
             functions.text_in_box("Cash %r"%player.player[0].cash,_font,maroon,display_height + gaph,gapv + 0.1*boxl ,boxb,0.1*boxl)
@@ -191,6 +197,7 @@ def Button(msg,x,y,l,h,ac,ic,function,tc):
                         player.player[player_index].cash -= Property._property[place].cost
                         Property._property[place].owner = player_index
                         player.player[player_index].properties.append(place)
+                        
                         key = 2
                         
                             
