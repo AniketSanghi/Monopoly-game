@@ -16,6 +16,7 @@ cgaph = ((boxb/2)-(3*cardl))/4
 cgapv = 0.05*boxl
 c2gaph= ((boxb/2)-(2*cardl))/3
 tflag = 0
+temo = None
 timer = 8
 
 
@@ -97,26 +98,24 @@ class Property():
         pygame.display.update()
 
     def squares(self):
-        global tflag ,timer
+        global tflag ,timer,temo
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
+        
         if self.owner == 0:
             pygame.draw.rect(functions.gameDisplay, self.color, [self.x1,self.y1,cardl,cardh])
             if self.x1 < mouse[0] < self.x1+cardl and self.y1 < mouse[1] < self.y1 + cardh:
                 if click[0]==1:
                     tflag = 1
+                    temo = self
             
         if self.owner == 1:
             pygame.draw.rect(functions.gameDisplay, self.color, [self.x2,self.y2,cardl,cardh])
             if self.x2 < mouse[0] < self.x2+cardl and self.y2 < mouse[1] < self.y2 + cardh:
                 if click[0]==1:
                     tflag = 1
-        if tflag == 1:
-            timer -= 1
-            self.card()
-            if timer == 0:
-                flag = 0
-                timer = 8
+                    temo = self
+
                 
 
 _property = { "delhi":Property("Delhi",red,"India",card_length + card_breadth/2,card_length/2,80000,display_height + gaph + cgaph,gapv + 0.2*boxl + cgapv,display_height + gaph + cgaph,2*gapv + boxl + 0.2*boxl + cgapv )

@@ -34,6 +34,8 @@ endturn = 0
 key = 0
 place = " "
 timer = 8
+n=0
+incometax = 0
 
 clock = pygame.time.Clock()
 
@@ -52,7 +54,7 @@ def mainscreen():
                 
            
 def drawing():
-            global key,timer
+            global key,timer,incometax
             functions.gameDisplay.fill(lblue)
             pygame.draw.rect(functions.gameDisplay, white, [0,0,display_height,display_height])
             functions.addimage('images/back.png',card_length,card_length)
@@ -105,11 +107,11 @@ def drawing():
             Property._property["saintpetersburg"].locmaker()
             Property._property["capetown"].locmaker()
             Property._property["durban"].locmaker()
-
+            __font = pygame.font.Font('freesansbold.ttf',15)
             if card_display == 1:
                 
                 
-                __font = pygame.font.Font('freesansbold.ttf',15)
+ 
                 if Property._property[place].owner != None and key == 0 and player_index != Property._property[place].owner:
                     Property._property[place].card()
                     if Property._property[place].no_of_houses == 0:
@@ -148,13 +150,43 @@ def drawing():
                     if timer == 0:
                         key = 1
                         timer = 8
+            
 
-                    
+            if incometax == 1:
+                if key == 0:
+                    player.player[player_index].total_wealth = 0.9*player.player[player_index].total_wealth
+                    player.player[player_index].cash = 0.9*player.player[player_index].cash
+                    key = 2
+                if key == 2:
+                    timer-=1
+                    functions.text_in_box("You paid income tax of %r"%(0.1*(player.player[player_index].total_wealth*10/9)),__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+                    if timer == 0:
+                        incometax = 0
+                        timer = 8
+                        key = 1
+            elif incometax == 2:
+                if key == 0:
+                    player.player[player_index].total_wealth -= 30000 
+                    player.player[player_index].cash -= 30000
+                    key = 2
+                if key == 2:
+                    timer-=1
+                    functions.text_in_box("You paid luxury tax of $30000",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+                    if timer == 0:
+                        incometax = 0
+                        timer = 8
+                        key = 1                               
             player.player[1].draw()
             player.player[0].draw()
 
             for item,tempo in Property._property.items():
                 Property._property[item].squares()
+            if Property.tflag == 1:
+                timer -= 1
+                Property.temo.card()
+                if timer == 0:
+                    Property.tflag = 0
+                    timer = 8    
 
             functions.text_in_box("Player 1",_font,maroon,display_height + gaph,gapv,boxb,0.1*boxl)
             functions.text_in_box("Cash %r"%player.player[0].cash,_font,maroon,display_height + gaph,gapv + 0.1*boxl ,boxb,0.1*boxl)
@@ -167,7 +199,7 @@ def drawing():
 
 def Button(msg,x,y,l,h,ac,ic,function,tc):
             global player_index,place,card_display
-            global rollonce,endturn,key 
+            global rollonce,endturn,key,n,incometax 
             pygame.draw.rect(functions.gameDisplay, ic, [x,y,l,h])
             mouse = pygame.mouse.get_pos()
             click = pygame.mouse.get_pressed()
@@ -176,13 +208,23 @@ def Button(msg,x,y,l,h,ac,ic,function,tc):
                 if click[0]==1:
                     if function == "roll" and rollonce == 0:
                         n = functions.rolldice()
+                        
                         player.player[player_index].movement(n)
                         rollonce = 1
+                        
                         for tplace,tempo in Property._property.items():
                             if Property._property[tplace].locx == player.player[player_index].posx and Property._property[tplace].locy == player.player[player_index].posy:
                                 card_display = 1
                                 key = 0
                                 place = tplace
+                        if player.player[player_index].posx == (card_length+5*card_breadth + 0.5*card_breadth) and player.player[player_index].posy == (display_height-card_length/2):
+                            incometax = 1
+                            key = 0
+                        if player.player[player_index].posx == display_height-card_length/2 and player.player[player_index].posy == 7*card_breadth+card_length+0.5*card_breadth :
+                            incometax = 2
+                            key = 0
+                        
+
                         endturn = 0   
                             
                     if function == "endturn" and endturn == 0:
