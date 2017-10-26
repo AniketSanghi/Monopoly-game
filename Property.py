@@ -67,25 +67,25 @@ class Property():
             functions.text_in_box(self.name,lfont,black,0,self.locy-card_breadth/2,0.7*card_length,card_breadth)
             functions.gameDisplay.fill(self.color, rect = [0.7*card_length,self.locy-card_breadth/2,0.3*card_length,card_breadth])
             if  self.no_of_houses >= 1:
-                functions.gameDisplay.fill(c1, rect = [0.7*card_length,self.locy-card_breadth/2,0.3*card_length/4,card_breadth])
+                functions.gameDisplay.fill(c1, rect = [0.7*card_length,self.locy-card_breadth/4,0.3*card_length/4,card_breadth/2])
             if self.no_of_houses >= 2:
-                functions.gameDisplay.fill(c2, rect = [0.7*card_length + 0.3*card_length/4,self.locy-card_breadth/2,0.3*card_length/4,card_breadth])
+                functions.gameDisplay.fill(c2, rect = [0.7*card_length + 0.3*card_length/4,self.locy-card_breadth/4,0.3*card_length/4,card_breadth/2])
             if self.no_of_houses >= 3:
-                functions.gameDisplay.fill(c3, rect = [0.7*card_length + 0.6*card_length/4,self.locy-card_breadth/2,0.3*card_length/4,card_breadth])
-            if self.no_of_houses >= 4:
-                functions.gameDisplay.fill(c4, rect = [0.7*card_length + 0.9*card_length/4,self.locy-card_breadth/2,0.3*card_length/4,card_breadth])    
+                functions.gameDisplay.fill(c3, rect = [0.7*card_length + 0.6*card_length/4,self.locy-card_breadth/4,0.3*card_length/4,card_breadth/2])
+            if self.no_of_houses == 4:
+                functions.gameDisplay.fill(c4, rect = [0.7*card_length + 0.9*card_length/4,self.locy-card_breadth/4,0.3*card_length/4,card_breadth/2])    
         elif self.locx == display_height -  card_length/2:
             pygame.draw.rect(functions.gameDisplay,black,[display_height -  card_length,self.locy-card_breadth/2,card_length,card_breadth],1)
             functions.text_in_box(self.name,lfont,black,display_height -  0.7*card_length,self.locy-card_breadth/2,0.7*card_length,card_breadth)
             functions.gameDisplay.fill(self.color, rect = [display_height -  card_length,self.locy-card_breadth/2,0.3*card_length,card_breadth])
             if self.no_of_houses >= 1:
-                functions.gameDisplay.fill(c1, rect = [display_height -  card_length + 0.9*card_length/4 ,self.locy-card_breadth/2,0.3*card_length/4,card_breadth])
+                functions.gameDisplay.fill(c1, rect = [display_height -  card_length + 0.9*card_length/4 ,self.locy-card_breadth/4,0.3*card_length/4,card_breadth/2])
             if self.no_of_houses >= 2:
-                functions.gameDisplay.fill(c2, rect = [display_height -  card_length + 0.6*card_length/4 ,self.locy-card_breadth/2,0.3*card_length/4,card_breadth])
+                functions.gameDisplay.fill(c2, rect = [display_height -  card_length + 0.6*card_length/4 ,self.locy-card_breadth/4,0.3*card_length/4,card_breadth/2])
             if self.no_of_houses >= 3:
-                functions.gameDisplay.fill(c3, rect = [display_height -  card_length + 0.3*card_length/4 ,self.locy-card_breadth/2,0.3*card_length/4,card_breadth])
-            if self.no_of_houses >= 4:
-                functions.gameDisplay.fill(c4, rect = [display_height -  card_length  ,self.locy-card_breadth/2,0.3*card_length/4,card_breadth])
+                functions.gameDisplay.fill(c3, rect = [display_height -  card_length + 0.3*card_length/4 ,self.locy-card_breadth/4,0.3*card_length/4,card_breadth/2])
+            if self.no_of_houses == 4:
+                functions.gameDisplay.fill(c4, rect = [display_height -  card_length  ,self.locy-card_breadth/4,0.3*card_length/4,card_breadth/2])
         elif self.locy == card_length/2:
             pygame.draw.rect(functions.gameDisplay,black,[self.locx-card_breadth/2,0,card_breadth,card_length],1)
             a = self.name.split(' ')
@@ -95,25 +95,25 @@ class Property():
                 temp += 0.35*card_length
             functions.gameDisplay.fill(self.color, rect = [self.locx-card_breadth/2,0.7*card_length,card_breadth,0.3*card_length])
             if self.no_of_houses >= 1:
-                functions.gameDisplay.fill(c1, rect = [self.locx-card_breadth/2,0.7*card_length,card_breadth,0.3*card_length/4])
+                functions.gameDisplay.fill(c1, rect = [self.locx-card_breadth/4,0.7*card_length,card_breadth/2,0.3*card_length/4])
             if self.no_of_houses >= 2:
-                functions.gameDisplay.fill(c2, rect = [self.locx-card_breadth/2,0.7*card_length + 0.3*card_length/4,card_breadth,0.3*card_length/4])
+                functions.gameDisplay.fill(c2, rect = [self.locx-card_breadth/4,0.7*card_length + 0.3*card_length/4,card_breadth/2,0.3*card_length/4])
             if self.no_of_houses >= 3:
-                functions.gameDisplay.fill(c3, rect = [self.locx-card_breadth/2,0.7*card_length + 0.6*card_length/4,card_breadth,0.3*card_length/4])
-            if self.no_of_houses >= 4:
-                functions.gameDisplay.fill(c4, rect = [self.locx-card_breadth/2,0.7*card_length + 0.9*card_length/4,card_breadth,0.3*card_length/4])
+                functions.gameDisplay.fill(c3, rect = [self.locx-card_breadth/4,0.7*card_length + 0.6*card_length/4,card_breadth/2,0.3*card_length/4])
+            if self.no_of_houses == 4:
+                functions.gameDisplay.fill(c4, rect = [self.locx-card_breadth/4,0.7*card_length + 0.9*card_length/4,card_breadth/2,0.3*card_length/4])
         elif self.locy ==  display_height -  card_length/2:
             pygame.draw.rect(functions.gameDisplay,black,[self.locx-card_breadth/2,display_height -  card_length,card_breadth,card_length],1)
             functions.text_in_box(self.name,lfont,black,self.locx-card_breadth/2,display_height -  0.7*card_length,card_breadth,0.7*card_length)
             functions.gameDisplay.fill(self.color, rect = [self.locx-card_breadth/2,display_height -  card_length,card_breadth,0.3*card_length])
             if self.no_of_houses >= 1:
-                functions.gameDisplay.fill(c1, rect = [self.locx-card_breadth/2,display_height -  card_length + 0.9*card_length/4,card_breadth,0.3*card_length/4])
+                functions.gameDisplay.fill(c1, rect = [self.locx-card_breadth/4,display_height -  card_length + 0.9*card_length/4,card_breadth/2,0.3*card_length/4])
             if self.no_of_houses >= 2:
-                functions.gameDisplay.fill(c2, rect = [self.locx-card_breadth/2,display_height -  card_length + 0.6*card_length/4,card_breadth,0.3*card_length/4])
+                functions.gameDisplay.fill(c2, rect = [self.locx-card_breadth/4,display_height -  card_length + 0.6*card_length/4,card_breadth/2,0.3*card_length/4])
             if self.no_of_houses >= 3:
-                functions.gameDisplay.fill(c3, rect = [self.locx-card_breadth/2,display_height -  card_length + 0.3*card_length/4,card_breadth,0.3*card_length/4])
-            if self.no_of_houses >= 4:
-                functions.gameDisplay.fill(c4, rect = [self.locx-card_breadth/2,display_height -  card_length ,card_breadth,0.3*card_length/4])
+                functions.gameDisplay.fill(c3, rect = [self.locx-card_breadth/4,display_height -  card_length + 0.3*card_length/4,card_breadth/2,0.3*card_length/4])
+            if self.no_of_houses == 4:
+                functions.gameDisplay.fill(c4, rect = [self.locx-card_breadth/4,display_height -  card_length ,card_breadth/2,0.3*card_length/4])
         pygame.display.update() 
 
     def card(self):

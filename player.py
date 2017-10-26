@@ -27,7 +27,7 @@ class Player:
         self.cash = 300000
         self.posx = display_height-card_length/2
         self.posy = display_height-card_length/2
-        self.total_wealth = 500000
+        self.total_wealth = 300000
         self.properties = []
         self.getoutofjailcard = 0
         self.color = color

@@ -116,12 +116,12 @@ def drawing():
             if card_display == 1:
                 if Property._property[place].owner != None and key == 0 and player_index != Property._property[place].owner:
                     Property._property[place].card()
-                    if timer == 5:
-                        player.player[player_index].cash -= Property._property[place].houses[no_of_houses]
-                        player.player[player_index].total_wealth -= Property._property[place].houses[no_of_houses]
-                        player.player[Property._property[place].owner].cash += Property._property[place].houses[no_of_houses]
-                        player.player[Property._property[place].owner].total_wealth += Property._property[place].houses[no_of_houses]
-                        functions.text_in_box("You paid rent of %r to player %r?"%(Property._property[place].houses[no_of_houses],Property._property[place].owner+1),__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+                    if timer == 8:
+                        player.player[player_index].cash -= Property._property[place].houses[Property._property[place].no_of_houses]
+                        player.player[player_index].total_wealth -= Property._property[place].houses[Property._property[place].no_of_houses]
+                        player.player[Property._property[place].owner].cash += Property._property[place].houses[Property._property[place].no_of_houses]
+                        player.player[Property._property[place].owner].total_wealth += Property._property[place].houses[Property._property[place].no_of_houses]
+                    functions.text_in_box("You paid rent of %r to player %r?"%(Property._property[place].houses[Property._property[place].no_of_houses],Property._property[place].owner+1),__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
                     timer -= 1
                     if timer == 0:
                         key = 1
@@ -143,7 +143,7 @@ def drawing():
             if incometax == 1:
                 if key == 0:
                     player.player[player_index].total_wealth = 0.9*player.player[player_index].total_wealth
-                    player.player[player_index].cash = 0.9*player.player[player_index].total_wealth
+                    player.player[player_index].cash = 0.9*(player.player[player_index].total_wealth*10/9)
                     key = 2
                 if key == 2:
                     timer-=1
@@ -240,14 +240,17 @@ def Button(msg,x,y,l,h,ac,ic,function,tc):
                         pass
                     if function == "build":
                         valid = 1
+                        if Property.temo.owner != player_index or Property.temo.no_of_houses == 4:
+                            valid = 0
                         for xplace,tempo in Property._property.items():
                             if Property._property[xplace].country == Property.temo.country:
-                                if Property._property[xplace].no_of_houses < Property.temo.no_of_houses:
+                                if (Property._property[xplace].no_of_houses < Property.temo.no_of_houses) or Property._property[xplace].owner != player_index:
                                     valid = 0
                                     break
                         if valid == 1:
-                             
                             Property.temo.no_of_houses += 1
+                            player.player[player_index].cash -= Property.temo.cost 
+                            
                         
                             
             _font = pygame.font.Font('freesansbold.ttf',20)
