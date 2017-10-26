@@ -51,11 +51,7 @@ class Property():
         self.locx = locx
         self.locy = locy
         self.cost = cost
-        self.rent = 0.1*self.cost
-        self.house1 = 0.4*self.cost
-        self.house2 = 0.5*self.cost
-        self.house3 = 0.6*self.cost
-        self.hotel = self.cost
+        self.houses = [0.1*self.cost,0.4*self.cost,0.5*self.cost,0.6*self.cost,self.cost]
         self.mortgage = 0.4*self.cost
         self.no_of_houses = 0
         self.owner = None
@@ -125,11 +121,11 @@ class Property():
         lfont = pygame.font.Font('freesansbold.ttf',25)
         functions.text_in_box(self.name,lfont,self.color,170,410,200,30)
         functions.message_to_screen("Cost: $ %d"%self.cost,black,180,460,20)
-        functions.message_to_screen("Rent: $ %d"%self.rent,black,180,480,20)
-        functions.message_to_screen("1st floor: $ %d"%self.house1,black,180,500,20)
-        functions.message_to_screen("2nd floor: $ %d"%self.house2,black,180,520,20)
-        functions.message_to_screen("3rd floor: $ %d"%self.house3,black,180,540,20)
-        functions.message_to_screen("Hotel: $ %d"%self.hotel,black,180,560,20)
+        functions.message_to_screen("Rent: $ %d"%self.houses[0],black,180,480,20)
+        functions.message_to_screen("1st floor: $ %d"%self.houses[1],black,180,500,20)
+        functions.message_to_screen("2nd floor: $ %d"%self.houses[2],black,180,520,20)
+        functions.message_to_screen("3rd floor: $ %d"%self.houses[3],black,180,540,20)
+        functions.message_to_screen("Hotel: $ %d"%self.houses[4],black,180,560,20)
         functions.message_to_screen("Mortgage value: $ %d"%self.mortgage,black,190,600,20)
         pygame.display.update()
 

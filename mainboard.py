@@ -110,42 +110,27 @@ def drawing():
             Property._property["saintpetersburg"].locmaker()
             Property._property["capetown"].locmaker()
             Property._property["durban"].locmaker()
+
             __font = pygame.font.Font('freesansbold.ttf',15)
+
             if card_display == 1:
-                
-                
- 
                 if Property._property[place].owner != None and key == 0 and player_index != Property._property[place].owner:
                     Property._property[place].card()
-                    if Property._property[place].no_of_houses == 0:
-                        rent_paid = Property._property[place].rent
-                    elif Property._property[place].no_of_houses == 1:
-                        rent_paid = Property._property[place].house1
-                    elif Property._property[place].no_of_houses == 2:
-                        rent_paid = Property._property[place].house2
-                    elif Property._property[place].no_of_houses == 3:
-                        rent_paid = Property._property[place].house3
-                    elif Property._property[place].no_of_houses == 4:
-                        rent_paid = Property._property[place].hotel
                     if timer == 5:
-                        player.player[player_index].cash -= rent_paid
-                        player.player[player_index].total_wealth -= rent_paid
-                        player.player[Property._property[place].owner].cash += rent_paid
-                        player.player[Property._property[place].owner].total_wealth += rent_paid
-                        functions.text_in_box("You paid rent of %r to player %r?"%(rent_paid,Property._property[place].owner+1),__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+                        player.player[player_index].cash -= Property._property[place].houses[no_of_houses]
+                        player.player[player_index].total_wealth -= Property._property[place].houses[no_of_houses]
+                        player.player[Property._property[place].owner].cash += Property._property[place].houses[no_of_houses]
+                        player.player[Property._property[place].owner].total_wealth += Property._property[place].houses[no_of_houses]
+                        functions.text_in_box("You paid rent of %r to player %r?"%(Property._property[place].houses[no_of_houses],Property._property[place].owner+1),__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
                     timer -= 1
                     if timer == 0:
                         key = 1
                         timer = 8
-
                 if Property._property[place].owner == None and key == 0:
                     Property._property[place].card()
                     functions.text_in_box("Do you want to purchase %r ?"%Property._property[place].name,__font,orange,display_height/2,display_height/2 - blockh,display_height/2-card_length,display_height/2-card_length)
                     Button("YES",display_height*3/4 - card_length/2-blockl,display_height*3/4 - card_length/2 + blockh/2,blockl/2,blockh,yellow,llblue,"yes",red)
                     Button("NO",display_height*3/4 - card_length/2 + blockl/2,display_height*3/4 - card_length/2 + blockh/2,blockl/2,blockh,yellow,llblue,"no",red)
-
-                        
-
                 if key == 2:
                     Property._property[place].card()
                     functions.text_in_box("Successfully purchased %r"%(Property._property[place].name),__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
@@ -158,7 +143,7 @@ def drawing():
             if incometax == 1:
                 if key == 0:
                     player.player[player_index].total_wealth = 0.9*player.player[player_index].total_wealth
-                    player.player[player_index].cash = 0.9*player.player[player_index].cash
+                    player.player[player_index].cash = 0.9*player.player[player_index].total_wealth
                     key = 2
                 if key == 2:
                     timer-=1
