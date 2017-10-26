@@ -24,7 +24,7 @@ pygame.display.update()
 
 class Player:
     def __init__(self,color,no):
-        self.cash = 500000
+        self.cash = 300000
         self.posx = display_height-card_length/2
         self.posy = display_height-card_length/2
         self.total_wealth = 500000

@@ -17,6 +17,9 @@ back = (100,10,100)
 
 clock = pygame.time.Clock()
 
+a=0
+b=0
+
 
 gameDisplay = pygame.display.set_mode((display_width,display_height))
 pygame.display.set_caption("Monopoly")
@@ -62,6 +65,7 @@ def message_to_screen(msg, color,x,y,s):
     gameDisplay.blit(screen_text, [x,y])
 
 def rolldice():
+     global a,b
      a = random.randrange(1,7)
      b = random.randrange(1,7)
      return a+b

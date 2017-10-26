@@ -36,6 +36,8 @@ place = " "
 timer = 8
 n=0
 incometax = 0
+gotojail = 0
+
 
 clock = pygame.time.Clock()
 
@@ -54,7 +56,7 @@ def mainscreen():
                 
            
 def drawing():
-            global key,timer,incometax
+            global key,timer,incometax,gotojail
             functions.gameDisplay.fill(lblue)
             pygame.draw.rect(functions.gameDisplay, white, [0,0,display_height,display_height])
             functions.addimage('images/back.png',card_length,card_length)
@@ -79,7 +81,8 @@ def drawing():
             functions.addimage('images/luxury.png',display_height-card_length,7*card_breadth+card_length)
             functions.addimage('images/income.png',card_length+5*card_breadth,display_height-card_length)
 
-            functions.text_in_box("Player %r's turn "%(player_index+1),_font,blue,card_length,card_length,display_height-2*card_length,blockh)
+            functions.text_in_box("Player %r's turn "%(player_index+1),_font,blue,card_length,card_length,(display_height-2*card_length)/2,blockh)
+            functions.text_in_box("( %r , %r )"%(functions.a,functions.b),_font,blue,card_length,card_length,display_height-2*card_length,blockh)
 
             Button("ROLE DICE",(display_height-blockl)/2,(display_height/2+card_length)/2 - 1.25*blockh,blockl,blockh,yellow,llblue,"roll",red)
             Button("END TURN",(display_height-blockl)/2,(display_height/2+card_length)/2 + 0.25*blockh,blockl,blockh,yellow,llblue,"endturn",red)
@@ -182,11 +185,14 @@ def drawing():
             for item,tempo in Property._property.items():
                 Property._property[item].squares()
             if Property.tflag == 1:
-                timer -= 1
                 Property.temo.card()
+                
+            if gotojail == 1:
+                timer -= 1
+                functions.text_in_box("Oops! You landed on gotojail",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
                 if timer == 0:
-                    Property.tflag = 0
-                    timer = 8    
+                    gotojail = 0
+                    timer = 8
 
             functions.text_in_box("Player 1",_font,maroon,display_height + gaph,gapv,boxb,0.1*boxl)
             functions.text_in_box("Cash %r"%player.player[0].cash,_font,maroon,display_height + gaph,gapv + 0.1*boxl ,boxb,0.1*boxl)
@@ -199,7 +205,7 @@ def drawing():
 
 def Button(msg,x,y,l,h,ac,ic,function,tc):
             global player_index,place,card_display
-            global rollonce,endturn,key,n,incometax 
+            global rollonce,endturn,key,n,incometax,gotojail 
             pygame.draw.rect(functions.gameDisplay, ic, [x,y,l,h])
             mouse = pygame.mouse.get_pos()
             click = pygame.mouse.get_pressed()
@@ -223,8 +229,11 @@ def Button(msg,x,y,l,h,ac,ic,function,tc):
                         if player.player[player_index].posx == display_height-card_length/2 and player.player[player_index].posy == 7*card_breadth+card_length+0.5*card_breadth :
                             incometax = 2
                             key = 0
-                        
-
+                        if player.player[player_index].posx == display_height-card_length/2 and player.player[player_index].posy == card_length/2:
+                            
+                            player.player[player_index].posx = card_length/2
+                            player.player[player_index].posy = display_height-card_length/2
+                            gotojail = 1
                         endturn = 0   
                             
                     if function == "endturn" and endturn == 0:
@@ -235,12 +244,25 @@ def Button(msg,x,y,l,h,ac,ic,function,tc):
                         rollonce = 0
                         card_display = 0
                         endturn = 1
+                        Property.tflag = 0
                     if function == "yes":
                         player.player[player_index].cash -= Property._property[place].cost
                         Property._property[place].owner = player_index
                         player.player[player_index].properties.append(place)
                         
                         key = 2
+                    if function == "no":
+                        pass
+                    if function == "build":
+                        valid = 1
+                        for xplace,tempo in Property._property.items():
+                            if Property._property[xplace].country == Property.temo.country:
+                                if Property._property[xplace].no_of_houses < Property.temo.no_of_houses:
+                                    valid = 0
+                                    break
+                        if valid == 1:
+                             
+                            Property.temo.no_of_houses += 1
                         
                             
             _font = pygame.font.Font('freesansbold.ttf',20)
