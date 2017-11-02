@@ -37,6 +37,8 @@ timer = 8
 n=0
 incometax = 0
 gotojail = 0
+cround = [0,0]
+round_complete = 0
 
 
 clock = pygame.time.Clock()
@@ -56,7 +58,7 @@ def mainscreen():
                 
            
 def drawing():
-            global key,timer,incometax,gotojail
+            global key,timer,incometax,gotojail,round_complete,cround
             functions.gameDisplay.fill(lblue)
             pygame.draw.rect(functions.gameDisplay, white, [0,0,display_height,display_height])
             functions.addimage('images/back.png',card_length,card_length)
@@ -113,6 +115,18 @@ def drawing():
             Property._property["durban"].locmaker()
 
             __font = pygame.font.Font('freesansbold.ttf',15)
+
+            if round_complete == 1:
+                functions.text_in_box("You Crossed Go , You gained $20000",__font,orange,card_length,(display_height/2+card_length)/2 + 1.25*blockh,display_height- 2*card_length,display_height/2 - ((display_height/2+card_length)/2 + 1.25*blockh))
+                if timer == 8:
+                    player.player[player_index].cash += 20000
+                    player.player[player_index].total_wealth += 20000
+                    cround[player_index]-=40
+                timer-=1
+                if timer == 0:
+                        
+                        round_complete = 0
+                        timer = 8
 
             if card_display == 1:
                 if Property._property[place].owner != None and key == 0 and player_index != Property._property[place].owner:
@@ -177,6 +191,7 @@ def drawing():
                 timer -= 1
                 functions.text_in_box("Oops! You landed on gotojail",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
                 if timer == 0:
+                    
                     gotojail = 0
                     timer = 8
 
@@ -191,7 +206,7 @@ def drawing():
 
 def Button(msg,x,y,l,h,ac,ic,function,tc):
             global player_index,place,card_display
-            global rollonce,endturn,key,n,incometax,gotojail 
+            global rollonce,endturn,key,n,incometax,gotojail,cround,round_complete 
             pygame.draw.rect(functions.gameDisplay, ic, [x,y,l,h])
             mouse = pygame.mouse.get_pos()
             click = pygame.mouse.get_pressed()
@@ -200,9 +215,12 @@ def Button(msg,x,y,l,h,ac,ic,function,tc):
                 if click[0]==1:
                     if function == "roll" and rollonce == 0:
                         n = functions.rolldice()
-                        
+                        cround[player_index] += n
                         player.player[player_index].movement(n)
                         rollonce = 1
+
+                        if cround[player_index] >= 40:
+                            round_complete = 1
                         
                         for tplace,tempo in Property._property.items():
                             if Property._property[tplace].locx == player.player[player_index].posx and Property._property[tplace].locy == player.player[player_index].posy:
@@ -219,6 +237,7 @@ def Button(msg,x,y,l,h,ac,ic,function,tc):
                             
                             player.player[player_index].posx = card_length/2
                             player.player[player_index].posy = display_height-card_length/2
+                            cround[player_index] -= 20
                             gotojail = 1
                         endturn = 0   
                             
@@ -254,13 +273,13 @@ def Button(msg,x,y,l,h,ac,ic,function,tc):
                     if function == "sell":
                         valid = 1
                         if Property.temo.owner != player_index or Property.temo.no_of_houses == 0:
-                            valid = 0
+                            valida = 0
                         for xplace,tempo in Property._property.items():
                             if Property._property[xplace].country == Property.temo.country:
                                 if (Property._property[xplace].no_of_houses > Property.temo.no_of_houses) or Property._property[xplace].owner != player_index:
-                                    valid = 0
+                                    valida = 0
                                     break
-                        if valid == 1:
+                        if valida == 1:
                             Property.temo.no_of_houses -= 1
                             player.player[player_index].cash += 0.5*Property.temo.cost 
                     
