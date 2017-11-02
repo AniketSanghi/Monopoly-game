@@ -87,7 +87,8 @@ def drawing():
             Button("ROLE DICE",(display_height-blockl)/2,(display_height/2+card_length)/2 - 1.25*blockh,blockl,blockh,yellow,llblue,"roll",red)
             Button("END TURN",(display_height-blockl)/2,(display_height/2+card_length)/2 + 0.25*blockh,blockl,blockh,yellow,llblue,"endturn",red)
             Button("BUILD",(display_height-3*blockl)/2 - 0.2*blockl,(display_height/2+card_length)/2 - 0.5*blockh,blockl,blockh,yellow,llblue,"build",red)
-
+            Button("SELL",(display_height+1*blockl)/2 + 0.2*blockl,(display_height/2+card_length)/2 - 0.5*blockh,blockl,blockh,yellow,llblue,"sell",red)
+            
             Property._property["delhi"].locmaker()
             Property._property["mumbai"].locmaker()
             Property._property["banglore"].locmaker()
@@ -250,7 +251,20 @@ def Button(msg,x,y,l,h,ac,ic,function,tc):
                         if valid == 1:
                             Property.temo.no_of_houses += 1
                             player.player[player_index].cash -= Property.temo.cost 
-                            
+                    if function == "sell":
+                        valid = 1
+                        if Property.temo.owner != player_index or Property.temo.no_of_houses == 0:
+                            valid = 0
+                        for xplace,tempo in Property._property.items():
+                            if Property._property[xplace].country == Property.temo.country:
+                                if (Property._property[xplace].no_of_houses > Property.temo.no_of_houses) or Property._property[xplace].owner != player_index:
+                                    valid = 0
+                                    break
+                        if valid == 1:
+                            Property.temo.no_of_houses -= 1
+                            player.player[player_index].cash += 0.5*Property.temo.cost 
+                    
+                        
                         
                             
             _font = pygame.font.Font('freesansbold.ttf',20)
