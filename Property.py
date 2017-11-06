@@ -13,8 +13,9 @@ gaph = (display_width - display_height - 2*boxb)/3
 cardl = 0.1*boxb
 cardh = 0.1*boxl
 cgaph = ((boxb/2)-(3*cardl))/4
-cgapv = 0.05*boxl
-c2gaph= ((boxb/2)-(2*cardl))/3
+cgapv = 0.03*boxl
+c2gaph = ((boxb/2)-(2*cardl))/3
+c3gaph = ((boxb/2)-(4*cardl))/5
 tflag = 0
 temo = None
 timer = 8
@@ -148,7 +149,97 @@ class Property():
                     tflag = 1
                     temo = self
 
-                
+class special_cards():
+
+    def __init__(self,name,cost,locx,locy,x1,y1,x2,y2):
+        self.name = name
+        self.cost = cost
+        self.x1 = x1
+        self.x2 = x2
+        self.y1 = y1
+        self.y2 = y2
+        self.locx = locx
+        self.locy = locy
+        self.mortgage = 0.4*self.cost
+        self.owner = None
+    def card(self):
+        functions.gameDisplay.fill(white, rect = [170,400,200,250])
+        lfont = pygame.font.Font('freesansbold.ttf',25)
+        functions.text_in_box(self.name,lfont,black,170,410,200,30)
+        functions.message_to_screen("Cost: $ %d"%self.cost,black,180,460,20)
+        functions.message_to_screen("If one utility is owned",black,180,480,20)
+        functions.message_to_screen("Rent = 1000*(sum on dice)",black,180,500,20)
+        functions.message_to_screen("If both utilities are owned",black,180,520,20)
+        functions.message_to_screen("Rent = 3000*(sum on dice)",black,180,540,20)
+        
+        functions.message_to_screen("Mortgage value: $ %d"%self.mortgage,black,190,600,20)
+        pygame.display.update()
+        
+    def locmaker(self):
+        lfont = pygame.font.Font('freesansbold.ttf',10)
+        if self.locx == card_length/2:
+            pygame.draw.rect(functions.gameDisplay,black,[0,self.locy-card_breadth/2,card_length,card_breadth],1)
+            functions.text_in_box(self.name,lfont,black,0,self.locy-card_breadth/2,0.7*card_length,card_breadth)
+            functions.gameDisplay.fill(black, rect = [0.7*card_length,self.locy-card_breadth/2,0.3*card_length,card_breadth])
+            
+        elif self.locx == display_height -  card_length/2:
+            pygame.draw.rect(functions.gameDisplay,black,[display_height -  card_length,self.locy-card_breadth/2,card_length,card_breadth],1)
+            functions.text_in_box(self.name,lfont,black,display_height -  0.7*card_length,self.locy-card_breadth/2,0.7*card_length,card_breadth)
+            functions.gameDisplay.fill(black, rect = [display_height -  card_length,self.locy-card_breadth/2,0.3*card_length,card_breadth])
+            
+        elif self.locy == card_length/2:
+            pygame.draw.rect(functions.gameDisplay,black,[self.locx-card_breadth/2,0,card_breadth,card_length],1)
+            a = self.name.split(' ')
+            temp = 0
+            for x in a:
+                functions.text_in_box(x,lfont,black,self.locx-card_breadth/2,temp,card_breadth,0.35*card_length)
+                temp += 0.35*card_length
+            functions.gameDisplay.fill(black, rect = [self.locx-card_breadth/2,0.7*card_length,card_breadth,0.3*card_length])
+            
+        elif self.locy ==  display_height -  card_length/2:
+            pygame.draw.rect(functions.gameDisplay,black,[self.locx-card_breadth/2,display_height -  card_length,card_breadth,card_length],1)
+            functions.text_in_box(self.name,lfont,black,self.locx-card_breadth/2,display_height -  0.7*card_length,card_breadth,0.7*card_length)
+            functions.gameDisplay.fill(black, rect = [self.locx-card_breadth/2,display_height -  card_length,card_breadth,0.3*card_length])
+            
+        pygame.display.update()
+    def rcard(self):
+        functions.gameDisplay.fill(white, rect = [170,400,200,250])
+        lfont = pygame.font.Font('freesansbold.ttf',25)
+        functions.text_in_box(self.name,lfont,black,170,410,200,30)
+        functions.message_to_screen("Cost: $ %d"%self.cost,black,180,460,20)
+        functions.message_to_screen("Owned          Rent",black,180,480,20)
+        functions.message_to_screen("1 Railway      $2500",black,180,500,20)
+        functions.message_to_screen("2 Railway      $5000",black,180,520,20)
+        functions.message_to_screen("3 Railway      $10000",black,180,540,20)
+        functions.message_to_screen("4 Railway      $20000",black,180,560,20)
+        functions.message_to_screen("Mortgage value: $ %d"%self.mortgage,black,190,600,20)
+        pygame.display.update()
+    def squares(self):
+        global tflag ,timer,temo
+        mouse = pygame.mouse.get_pos()
+        click = pygame.mouse.get_pressed()
+        
+        if self.owner == 0:
+            pygame.draw.rect(functions.gameDisplay, black, [self.x1,self.y1,cardl,cardh])
+            if self.x1 < mouse[0] < self.x1+cardl and self.y1 < mouse[1] < self.y1 + cardh:
+                if click[0]==1:
+                    tflag = 1
+                    temo = self
+            
+        if self.owner == 1:
+            pygame.draw.rect(functions.gameDisplay, black, [self.x2,self.y2,cardl,cardh])
+            if self.x2 < mouse[0] < self.x2+cardl and self.y2 < mouse[1] < self.y2 + cardh:
+                if click[0]==1:
+                    tflag = 1
+                    temo = self
+
+sproperty = {  "electric":special_cards("Electric Company",80000,card_length/2,7*card_breadth+card_breadth/2+card_length,display_height + gaph + c2gaph,gapv + 0.2*boxl + 5*cgapv + 4*cardh,display_height + gaph + c2gaph,2*gapv + boxl + 0.2*boxl + 5*cgapv + 4*cardh)
+             , "water":special_cards("Water Works",70000,7*card_breadth+card_breadth/2+card_length,card_length/2,display_height + gaph + 2*c2gaph + cardl,gapv + 0.2*boxl + 5*cgapv + 4*cardh,display_height + gaph + 2*c2gaph + cardl,2*gapv + boxl + 0.2*boxl + 5*cgapv + 4*cardh)
+             , "rail1":special_cards("Railway",40000,card_length + 9*card_breadth/2,display_height - card_length/2,display_height + gaph + boxb/2+  c3gaph,gapv + 0.2*boxl + 5*cgapv + 4*cardh,display_height + gaph + boxb/2+ c3gaph,2*gapv + boxl + 0.2*boxl + 5*cgapv + 4*cardh)
+             , "rail2":special_cards("Railway",40000,card_length/2,card_length + 9*card_breadth/2,display_height + gaph + boxb/2+  2*c3gaph + cardl,gapv + 0.2*boxl + 5*cgapv + 4*cardh,display_height + gaph + boxb/2+ 2*c3gaph + cardl,2*gapv + boxl + 0.2*boxl + 5*cgapv + 4*cardh)  
+             , "rail3":special_cards("Railway",40000,card_length + 9*card_breadth/2,card_length/2,display_height + gaph + boxb/2+  3*c3gaph + 2*cardl,gapv + 0.2*boxl + 5*cgapv + 4*cardh,display_height + gaph + boxb/2+ 3*c3gaph + 2*cardl,2*gapv + boxl + 0.2*boxl + 5*cgapv + 4*cardh)
+             , "rail4":special_cards("Railway",40000,display_height - card_length/2,card_length + 9*card_breadth/2,display_height + gaph + boxb/2+  4*c3gaph + 3*cardl,gapv + 0.2*boxl + 5*cgapv + 4*cardh,display_height + gaph + boxb/2+ 4*c3gaph + 3*cardl,2*gapv + boxl + 0.2*boxl + 5*cgapv + 4*cardh)
+            }
 
 _property = { "delhi":Property("Delhi",red,"India",card_length + card_breadth/2,card_length/2,80000,display_height + gaph + cgaph,gapv + 0.2*boxl + cgapv,display_height + gaph + cgaph,2*gapv + boxl + 0.2*boxl + cgapv )
             , "mumbai":Property("Mumbai",red,"India",card_length + 5*(card_breadth/2),card_length/2,60000,display_height + gaph + 2*cgaph + cardl,gapv + 0.2*boxl + cgapv,display_height + gaph + 2*cgaph + cardl,2*gapv + boxl + 0.2*boxl + cgapv )
@@ -173,5 +264,6 @@ _property = { "delhi":Property("Delhi",red,"India",card_length + card_breadth/2,
             , "capetown":Property("Cape Town",orange,"SouthAfrica",card_length + 13*(card_breadth/2),display_height - card_length/2,80000,display_height + gaph + boxb/2+  c2gaph,gapv + 0.2*boxl + 4*cgapv + 3*cardh,display_height + gaph + boxb/2+ c2gaph,2*gapv + boxl + 0.2*boxl + 4*cgapv + 3*cardh)
             , "durban":Property("Durban",orange,"SouthAfrica",card_length + 17*(card_breadth/2),display_height - card_length/2,60000,display_height + gaph + boxb/2+ 2*c2gaph + cardl,gapv + 0.2*boxl + 4*cgapv + 3*cardh,display_height + gaph + boxb/2+ 2*c2gaph + cardl,2*gapv + boxl + 0.2*boxl + 4*cgapv + 3*cardh)              
             }
+
 
         

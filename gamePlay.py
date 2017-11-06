@@ -26,8 +26,4 @@ firstpage.screen1()
     
     
 
-
-
-
-
 pygame.quit()

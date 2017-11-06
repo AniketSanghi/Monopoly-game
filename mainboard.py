@@ -39,7 +39,9 @@ incometax = 0
 gotojail = 0
 cround = [0,0]
 round_complete = 0
-
+spcard_display = 0
+railway = 0
+rent = 0
 
 clock = pygame.time.Clock()
 
@@ -58,7 +60,7 @@ def mainscreen():
                 
            
 def drawing():
-            global key,timer,incometax,gotojail,round_complete,cround
+            global key,timer,incometax,gotojail,round_complete,cround,rent,railway
             functions.gameDisplay.fill(lblue)
             pygame.draw.rect(functions.gameDisplay, white, [0,0,display_height,display_height])
             functions.addimage('images/back.png',card_length,card_length)
@@ -113,7 +115,11 @@ def drawing():
             Property._property["saintpetersburg"].locmaker()
             Property._property["capetown"].locmaker()
             Property._property["durban"].locmaker()
-
+            Property.sproperty["rail1"].locmaker()
+            Property.sproperty["rail2"].locmaker()
+            Property.sproperty["rail3"].locmaker()
+            Property.sproperty["rail4"].locmaker()
+            
             __font = pygame.font.Font('freesansbold.ttf',15)
 
             if round_complete == 1:
@@ -127,6 +133,79 @@ def drawing():
                         
                         round_complete = 0
                         timer = 8
+
+            if spcard_display == 1:
+                if Property.sproperty[place].owner != None and key == 0 and player_index != Property.sproperty[place].owner:
+                    Property.sproperty[place].card()
+                    
+                    if timer == 8:
+
+                        dice_sum = functions.a + functions.b
+                        if Property.sproperty["electric"].owner == Property.sproperty["water"].owner:
+                            rent = 3000*dice_sum
+                        else:
+                            rent = 1000*dice_sum
+                        player.player[player_index].cash -= rent
+                        player.player[player_index].total_wealth -= rent
+                        player.player[Property.sproperty[place].owner].cash += rent
+                        player.player[Property.sproperty[place].owner].total_wealth += rent
+                    functions.text_in_box("You paid rent of %r to player %r?"%(rent,Property.sproperty[place].owner+1),__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+                    timer -= 1
+                    if timer == 0:
+                        key = 1
+                        timer = 8
+                if Property.sproperty[place].owner == None and key == 0:
+                    Property.sproperty[place].card()
+                    functions.text_in_box("Do you want to purchase %r ?"%Property.sproperty[place].name,__font,orange,display_height/2,display_height/2 - blockh,display_height/2-card_length,display_height/2-card_length)
+                    Button("YES",display_height*3/4 - card_length/2-blockl,display_height*3/4 - card_length/2 + blockh/2,blockl/2,blockh,yellow,llblue,"Yes",red)
+                    Button("NO",display_height*3/4 - card_length/2 + blockl/2,display_height*3/4 - card_length/2 + blockh/2,blockl/2,blockh,yellow,llblue,"no",red)
+                if key == 2:
+                    Property.sproperty[place].card()
+                    functions.text_in_box("Successfully purchased %r"%(Property.sproperty[place].name),__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+                    timer -= 1
+                    if timer == 0:
+                        key = 1
+                        timer = 8
+
+
+            if railway == 1:
+                if Property.sproperty[place].owner != None and key == 0 and player_index != Property.sproperty[place].owner:
+                    Property.sproperty[place].rcard()
+                    
+                    if timer == 8:
+                        if player.player[Property.sproperty[place].owner].no_of_railways == 1:
+                            rent = 2500
+                        if player.player[Property.sproperty[place].owner].no_of_railways == 2:
+                            rent = 5000
+                        if player.player[Property.sproperty[place].owner].no_of_railways == 3:
+                            rent = 10000
+                        if player.player[Property.sproperty[place].owner].no_of_railways == 4:
+                            rent = 20000
+                        player.player[player_index].cash -= rent
+                        player.player[player_index].total_wealth -= rent
+                        player.player[Property.sproperty[place].owner].cash += rent
+                        player.player[Property.sproperty[place].owner].total_wealth += rent
+                    functions.text_in_box("You paid rent of %r to player %r?"%(rent,Property.sproperty[place].owner+1),__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+                    timer -= 1
+                    if timer == 0:
+                        key = 1
+                        timer = 8
+                if Property.sproperty[place].owner == None and key == 0:
+                    Property.sproperty[place].rcard()
+                    functions.text_in_box("Do you want to purchase %r ?"%Property.sproperty[place].name,__font,orange,display_height/2,display_height/2 - blockh,display_height/2-card_length,display_height/2-card_length)
+                    Button("YES",display_height*3/4 - card_length/2-blockl,display_height*3/4 - card_length/2 + blockh/2,blockl/2,blockh,yellow,llblue,"YeS",red)
+                    Button("NO",display_height*3/4 - card_length/2 + blockl/2,display_height*3/4 - card_length/2 + blockh/2,blockl/2,blockh,yellow,llblue,"no",red)
+                if key == 2:
+                    Property.sproperty[place].rcard()
+                    functions.text_in_box("Successfully purchased %r"%(Property.sproperty[place].name),__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+                    timer -= 1
+                    if timer == 0:
+                        key = 1
+                        timer = 8
+
+
+
+
 
             if card_display == 1:
                 if Property._property[place].owner != None and key == 0 and player_index != Property._property[place].owner:
@@ -184,8 +263,19 @@ def drawing():
 
             for item,tempo in Property._property.items():
                 Property._property[item].squares()
+            Property.sproperty["electric"].squares()
+            Property.sproperty["water"].squares()
+            Property.sproperty["rail1"].squares()
+            Property.sproperty["rail2"].squares()
+            Property.sproperty["rail3"].squares()
+            Property.sproperty["rail4"].squares()
+            
             if Property.tflag == 1:
-                Property.temo.card()
+                if Property.temo == Property.sproperty["rail1"] or Property.temo == Property.sproperty["rail2"] or Property.temo == Property.sproperty["rail3"] or Property.temo == Property.sproperty["rail4"]:
+                    Property.temo.rcard()
+                    
+                else :
+                    Property.temo.card()
                 
             if gotojail == 1:
                 timer -= 1
@@ -205,7 +295,7 @@ def drawing():
             pygame.display.update()       
 
 def Button(msg,x,y,l,h,ac,ic,function,tc):
-            global player_index,place,card_display
+            global player_index,place,card_display,spcard_display,railway
             global rollonce,endturn,key,n,incometax,gotojail,cround,round_complete 
             pygame.draw.rect(functions.gameDisplay, ic, [x,y,l,h])
             mouse = pygame.mouse.get_pos()
@@ -215,6 +305,7 @@ def Button(msg,x,y,l,h,ac,ic,function,tc):
                 if click[0]==1:
                     if function == "roll" and rollonce == 0:
                         n = functions.rolldice()
+                        
                         cround[player_index] += n
                         player.player[player_index].movement(n)
                         rollonce = 1
@@ -227,6 +318,27 @@ def Button(msg,x,y,l,h,ac,ic,function,tc):
                                 card_display = 1
                                 key = 0
                                 place = tplace
+
+                        if (player.player[player_index].posx == Property.sproperty["electric"].locx and Property.sproperty["electric"].locy == player.player[player_index].posy) or (player.player[player_index].posx == Property.sproperty["water"].locx and Property.sproperty["water"].locy == player.player[player.index].posy):
+                            if player.player[player_index].posx == Property.sproperty["electric"].locx:
+                                place = "electric"
+                            elif player.player[player_index].posx == Property.sproperty["water"].locy:
+                                place = "water"
+                            spcard_display = 1
+                            key = 0
+
+                        if (player.player[player_index].posx == Property.sproperty["rail1"].locx  and Property.sproperty["rail1"].locy == player.player[player_index].posy) or (player.player[player_index].posx == Property.sproperty["rail2"].locx  and Property.sproperty["rail2"].locy == player.player[player_index].posy) or (player.player[player_index].posx == Property.sproperty["rail3"].locx  and Property.sproperty["rail3"].locy == player.player[player_index].posy) or (player.player[player_index].posx == Property.sproperty["rail4"].locx  and Property.sproperty["rail4"].locy == player.player[player_index].posy):
+                            if (player.player[player_index].posx == Property.sproperty["rail1"].locx  and Property.sproperty["rail1"].locy == player.player[player_index].posy):
+                                place = "rail1"
+                            elif (player.player[player_index].posx == Property.sproperty["rail2"].locx  and Property.sproperty["rail2"].locy == player.player[player_index].posy):
+                                place = "rail2"
+                            elif (player.player[player_index].posx == Property.sproperty["rail3"].locx  and Property.sproperty["rail3"].locy == player.player[player_index].posy):
+                                place = "rail3"
+                            elif (player.player[player_index].posx == Property.sproperty["rail4"].locx  and Property.sproperty["rail4"].locy == player.player[player_index].posy):
+                                place = "rail4"
+                            railway = 1
+                            key = 0
+                            
                         if player.player[player_index].posx == (card_length+5*card_breadth + 0.5*card_breadth) and player.player[player_index].posy == (display_height-card_length/2):
                             incometax = 1
                             key = 0
@@ -250,14 +362,34 @@ def Button(msg,x,y,l,h,ac,ic,function,tc):
                         card_display = 0
                         endturn = 1
                         Property.tflag = 0
+                        spcard_display = 0
+                        railway = 0
+                        
                     if function == "yes":
                         player.player[player_index].cash -= Property._property[place].cost
                         Property._property[place].owner = player_index
                         player.player[player_index].properties.append(place)
                         
                         key = 2
+
+                    if function == "Yes":
+                        player.player[player_index].cash -= Property.sproperty[place].cost
+                        Property.sproperty[place].owner = player_index
+                        
+                        key = 2
+
+                    if function == "YeS":
+                        player.player[player_index].cash -= Property.sproperty[place].cost
+                        Property.sproperty[place].owner = player_index
+                        
+                        player.player[player_index].no_of_railways += 1
+                        key = 2   
+                        
                     if function == "no":
-                        pass
+                        card_display = 0
+                        spcard_display = 0
+                        railway = 0
+                        
                     if function == "build":
                         valid = 1
                         if Property.temo.owner != player_index or Property.temo.no_of_houses == 4:
@@ -288,3 +420,4 @@ def Button(msg,x,y,l,h,ac,ic,function,tc):
                             
             _font = pygame.font.Font('freesansbold.ttf',20)
             functions.text_in_box(msg, _font,tc,x,y,l,h)
+
