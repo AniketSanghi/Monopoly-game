@@ -33,6 +33,7 @@ class Player:
         self.color = color
         self.no = no
         self.no_of_railways = 0
+        self.released = 1
     def draw(self):
             _font = pygame.font.Font('freesansbold.ttf',20)
             pygame.draw.circle(functions.gameDisplay,self.color,[(int)(self.posx),(int)(self.posy)],20)

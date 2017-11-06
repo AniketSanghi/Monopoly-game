@@ -42,6 +42,8 @@ round_complete = 0
 spcard_display = 0
 railway = 0
 rent = 0
+rolloncejail = 0
+temporary = 0
 
 clock = pygame.time.Clock()
 
@@ -60,7 +62,7 @@ def mainscreen():
                 
            
 def drawing():
-            global key,timer,incometax,gotojail,round_complete,cround,rent,railway
+            global key,timer,incometax,gotojail,round_complete,cround,rent,railway,temporary
             functions.gameDisplay.fill(lblue)
             pygame.draw.rect(functions.gameDisplay, white, [0,0,display_height,display_height])
             functions.addimage('images/back.png',card_length,card_length)
@@ -278,12 +280,46 @@ def drawing():
                     Property.temo.card()
                 
             if gotojail == 1:
-                timer -= 1
-                functions.text_in_box("Oops! You landed on gotojail",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
-                if timer == 0:
-                    
-                    gotojail = 0
-                    timer = 8
+                if temporary == 1:
+                    player.player[player_index].released = 0
+                    temporary = 0 
+                if key == 0:
+                    timer -= 2
+                    functions.text_in_box("Alert! You are caught... BUSTED!",__font,orange,card_length,(display_height/2+card_length)/2 + 1.25*blockh,display_height- 2*card_length,display_height/2 - ((display_height/2+card_length)/2 + 1.25*blockh))
+                    if timer == 0:
+                        key = 1
+                        timer = 8
+                if key == 1 or key == 0:
+                    Button("Pay $5000 and come out",card_length + 0.1*(display_height - 2*card_length),display_height/2,0.8*(display_height - 2*card_length),blockh,yellow,llblue,"pay",red)
+                    Button("Roll dice for a double",card_length + 0.1*(display_height - 2*card_length),display_height/2 + 2*blockh,0.8*(display_height - 2*card_length),blockh,yellow,llblue,"roll_for_double",red)
+                
+                if key == 3:
+                    functions.text_in_box("Roll your dice once",__font,orange,card_length,(display_height/2+card_length)/2 + 1.25*blockh,display_height- 2*card_length,display_height/2 - ((display_height/2+card_length)/2 + 1.25*blockh))
+                if key == 4 and player.player[player_index].released == 1:
+                    timer -= 2
+                    functions.text_in_box("Lucky Guy! You are released!",__font,orange,card_length,(display_height/2+card_length)/2 + 1.25*blockh,display_height- 2*card_length,display_height/2 - ((display_height/2+card_length)/2 + 1.25*blockh))
+                    if timer == 0:
+                        key = 1
+                        gotojail = 0
+                        timer = 8
+                if key == 4 and player.player[player_index].released == 0:
+                    timer -= 2
+                    functions.text_in_box("Better Luck next time!",__font,orange,card_length,(display_height/2+card_length)/2 + 1.25*blockh,display_height- 2*card_length,display_height/2 - ((display_height/2+card_length)/2 + 1.25*blockh))
+                    if timer == 0:
+                        key = 1
+                        gotojail = 0
+                        timer = 8
+                if key == 5:
+                    timer -= 2
+                    functions.text_in_box("You are released after giving a bail of $5000",__font,orange,card_length,(display_height/2+card_length)/2 + 1.25*blockh,display_height- 2*card_length,display_height/2 - ((display_height/2+card_length)/2 + 1.25*blockh))
+                    if timer == 0:
+                        key = 1
+                        gotojail = 0
+                        timer = 8
+
+
+
+                
 
             functions.text_in_box("Player 1",_font,maroon,display_height + gaph,gapv,boxb,0.1*boxl)
             functions.text_in_box("Cash %r"%player.player[0].cash,_font,maroon,display_height + gaph,gapv + 0.1*boxl ,boxb,0.1*boxl)
@@ -295,7 +331,7 @@ def drawing():
             pygame.display.update()       
 
 def Button(msg,x,y,l,h,ac,ic,function,tc):
-            global player_index,place,card_display,spcard_display,railway
+            global player_index,place,card_display,spcard_display,railway,rolloncejail,temporary
             global rollonce,endturn,key,n,incometax,gotojail,cround,round_complete 
             pygame.draw.rect(functions.gameDisplay, ic, [x,y,l,h])
             mouse = pygame.mouse.get_pos()
@@ -303,61 +339,73 @@ def Button(msg,x,y,l,h,ac,ic,function,tc):
             if x < mouse[0] < x+l and y < mouse[1] < y+h:
                 pygame.draw.rect(functions.gameDisplay, ac, [x,y,l,h])
                 if click[0]==1:
-                    if function == "roll" and rollonce == 0:
-                        n = functions.rolldice()
-                        
-                        cround[player_index] += n
-                        player.player[player_index].movement(n)
-                        rollonce = 1
+                    if function == "roll":
+                        if gotojail == 0 and player.player[player_index].released == 1 and rollonce == 0:
+                            n = functions.rolldice()
+                            
+                            cround[player_index] += n
+                            player.player[player_index].movement(n)
+                            rollonce = 1
 
-                        if cround[player_index] >= 40:
-                            round_complete = 1
-                        
-                        for tplace,tempo in Property._property.items():
-                            if Property._property[tplace].locx == player.player[player_index].posx and Property._property[tplace].locy == player.player[player_index].posy:
-                                card_display = 1
+                            if cround[player_index] >= 40:
+                                round_complete = 1
+                            
+                            for tplace,tempo in Property._property.items():
+                                if Property._property[tplace].locx == player.player[player_index].posx and Property._property[tplace].locy == player.player[player_index].posy:
+                                    card_display = 1
+                                    key = 0
+                                    place = tplace
+
+                            if (player.player[player_index].posx == Property.sproperty["electric"].locx and Property.sproperty["electric"].locy == player.player[player_index].posy) or (player.player[player_index].posx == Property.sproperty["water"].locx and Property.sproperty["water"].locy == player.player[player.index].posy):
+                                if player.player[player_index].posx == Property.sproperty["electric"].locx:
+                                    place = "electric"
+                                elif player.player[player_index].posx == Property.sproperty["water"].locy:
+                                    place = "water"
+                                spcard_display = 1
                                 key = 0
-                                place = tplace
 
-                        if (player.player[player_index].posx == Property.sproperty["electric"].locx and Property.sproperty["electric"].locy == player.player[player_index].posy) or (player.player[player_index].posx == Property.sproperty["water"].locx and Property.sproperty["water"].locy == player.player[player.index].posy):
-                            if player.player[player_index].posx == Property.sproperty["electric"].locx:
-                                place = "electric"
-                            elif player.player[player_index].posx == Property.sproperty["water"].locy:
-                                place = "water"
-                            spcard_display = 1
-                            key = 0
-
-                        if (player.player[player_index].posx == Property.sproperty["rail1"].locx  and Property.sproperty["rail1"].locy == player.player[player_index].posy) or (player.player[player_index].posx == Property.sproperty["rail2"].locx  and Property.sproperty["rail2"].locy == player.player[player_index].posy) or (player.player[player_index].posx == Property.sproperty["rail3"].locx  and Property.sproperty["rail3"].locy == player.player[player_index].posy) or (player.player[player_index].posx == Property.sproperty["rail4"].locx  and Property.sproperty["rail4"].locy == player.player[player_index].posy):
-                            if (player.player[player_index].posx == Property.sproperty["rail1"].locx  and Property.sproperty["rail1"].locy == player.player[player_index].posy):
-                                place = "rail1"
-                            elif (player.player[player_index].posx == Property.sproperty["rail2"].locx  and Property.sproperty["rail2"].locy == player.player[player_index].posy):
-                                place = "rail2"
-                            elif (player.player[player_index].posx == Property.sproperty["rail3"].locx  and Property.sproperty["rail3"].locy == player.player[player_index].posy):
-                                place = "rail3"
-                            elif (player.player[player_index].posx == Property.sproperty["rail4"].locx  and Property.sproperty["rail4"].locy == player.player[player_index].posy):
-                                place = "rail4"
-                            railway = 1
-                            key = 0
-                            
-                        if player.player[player_index].posx == (card_length+5*card_breadth + 0.5*card_breadth) and player.player[player_index].posy == (display_height-card_length/2):
-                            incometax = 1
-                            key = 0
-                        if player.player[player_index].posx == display_height-card_length/2 and player.player[player_index].posy == 7*card_breadth+card_length+0.5*card_breadth :
-                            incometax = 2
-                            key = 0
-                        if player.player[player_index].posx == display_height-card_length/2 and player.player[player_index].posy == card_length/2:
-                            
-                            player.player[player_index].posx = card_length/2
-                            player.player[player_index].posy = display_height-card_length/2
-                            cround[player_index] -= 20
-                            gotojail = 1
-                        endturn = 0   
+                            if (player.player[player_index].posx == Property.sproperty["rail1"].locx  and Property.sproperty["rail1"].locy == player.player[player_index].posy) or (player.player[player_index].posx == Property.sproperty["rail2"].locx  and Property.sproperty["rail2"].locy == player.player[player_index].posy) or (player.player[player_index].posx == Property.sproperty["rail3"].locx  and Property.sproperty["rail3"].locy == player.player[player_index].posy) or (player.player[player_index].posx == Property.sproperty["rail4"].locx  and Property.sproperty["rail4"].locy == player.player[player_index].posy):
+                                if (player.player[player_index].posx == Property.sproperty["rail1"].locx  and Property.sproperty["rail1"].locy == player.player[player_index].posy):
+                                    place = "rail1"
+                                elif (player.player[player_index].posx == Property.sproperty["rail2"].locx  and Property.sproperty["rail2"].locy == player.player[player_index].posy):
+                                    place = "rail2"
+                                elif (player.player[player_index].posx == Property.sproperty["rail3"].locx  and Property.sproperty["rail3"].locy == player.player[player_index].posy):
+                                    place = "rail3"
+                                elif (player.player[player_index].posx == Property.sproperty["rail4"].locx  and Property.sproperty["rail4"].locy == player.player[player_index].posy):
+                                    place = "rail4"
+                                railway = 1
+                                key = 0
+                                
+                            if player.player[player_index].posx == (card_length+5*card_breadth + 0.5*card_breadth) and player.player[player_index].posy == (display_height-card_length/2):
+                                incometax = 1
+                                key = 0
+                            if player.player[player_index].posx == display_height-card_length/2 and player.player[player_index].posy == 7*card_breadth+card_length+0.5*card_breadth :
+                                incometax = 2
+                                key = 0
+                            if player.player[player_index].posx == display_height-card_length/2 and player.player[player_index].posy == card_length/2:
+                                
+                                player.player[player_index].posx = card_length/2
+                                player.player[player_index].posy = display_height-card_length/2
+                                cround[player_index] -= 20
+                                gotojail = 1
+                                key = 0
+                                temporary = 1
+                            endturn = 0   
+                        if gotojail == 1 and player.player[player_index].released == 0 and key == 3 and rolloncejail == 0:
+                            n = functions.rolldice()
+                            if functions.a == functions.b:
+                                player.player[player_index].released = 1
+                            rolloncejail = 1
+                            key = 4
+                            endturn = 0
                             
                     if function == "endturn" and endturn == 0:
                         if player_index == 0:
                             player_index+=1
                         elif player_index == 1:
                             player_index-=1
+                        if player.player[player_index].released == 0:
+                            gotojail = 1
                         rollonce = 0
                         card_display = 0
                         endturn = 1
@@ -414,9 +462,15 @@ def Button(msg,x,y,l,h,ac,ic,function,tc):
                         if valida == 1:
                             Property.temo.no_of_houses -= 1
                             player.player[player_index].cash += 0.5*Property.temo.cost 
-                    
-                        
-                        
+                    if function == "roll_for_double":
+                        key = 3
+                        rolloncejail = 0
+                    if function == "pay":
+                        key = 5
+                        player.player[player_index].cash -= 5000
+                        player.player[player_index].total_wealth -= 5000
+                        player.player[player_index].released = 1
+                        endturn = 0
                             
             _font = pygame.font.Font('freesansbold.ttf',20)
             functions.text_in_box(msg, _font,tc,x,y,l,h)
