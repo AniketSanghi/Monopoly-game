@@ -62,12 +62,12 @@ class Property():                                                               
         self.y1 = y1
         self.y2 = y2
     
-    def locmaker(self):
+    def locmaker(self):                                         #it creates the respective property on the board 
         lfont = pygame.font.Font('freesansbold.ttf',10)
         if self.locx == card_length/2:
             pygame.draw.rect(functions.gameDisplay,black,[0,self.locy-card_breadth/2,card_length,card_breadth],1)
             functions.text_in_box(self.name,lfont,black,0,self.locy-card_breadth/2,0.7*card_length,card_breadth)
-            functions.gameDisplay.fill(self.color, rect = [0.7*card_length,self.locy-card_breadth/2,0.3*card_length,card_breadth])
+            functions.gameDisplay.fill(self.color, rect = [0.7*card_length,self.locy-card_breadth/2,0.3*card_length,card_breadth]) #draws houses on the site depending on the no. of houses
             if  self.no_of_houses >= 1:
                 functions.gameDisplay.fill(c1, rect = [0.7*card_length,self.locy-card_breadth/4,0.3*card_length/4,card_breadth/2])
             if self.no_of_houses >= 2:
@@ -118,7 +118,7 @@ class Property():                                                               
                 functions.gameDisplay.fill(c4, rect = [self.locx-card_breadth/4,display_height -  card_length ,card_breadth/2,0.3*card_length/4])
         pygame.display.update() 
 
-    def card(self):
+    def card(self):                     #this draws the card of the property with the respective details on it
         functions.gameDisplay.fill(white, rect = [170,400,200,250])
         lfont = pygame.font.Font('freesansbold.ttf',25)
         functions.text_in_box(self.name,lfont,self.color,170,410,200,30)
@@ -131,7 +131,7 @@ class Property():                                                               
         functions.message_to_screen("Mortgage value: $ %d"%self.mortgage,black,190,600,20)
         pygame.display.update()
 
-    def squares(self):
+    def squares(self):                      #this draws the links of the property on the respective player boxes depending on the owner 
         global tflag ,timer,temo
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
@@ -150,7 +150,7 @@ class Property():                                                               
                     tflag = 1
                     temo = self
 
-class special_cards():
+class special_cards():                          #for special cards that is utilities and railway
 
     def __init__(self,name,cost,locx,locy,x1,y1,x2,y2):
         self.name = name
@@ -163,7 +163,7 @@ class special_cards():
         self.locy = locy
         self.mortgage = 0.4*self.cost
         self.owner = None
-    def card(self):
+    def card(self):                                     #this sketches the card of the utility when called upon
         functions.gameDisplay.fill(white, rect = [170,400,200,250])
         lfont = pygame.font.Font('freesansbold.ttf',25)
         functions.text_in_box(self.name,lfont,black,170,410,200,30)
@@ -176,7 +176,7 @@ class special_cards():
         
         pygame.display.update()
         
-    def locmaker(self):
+    def locmaker(self):                                             #this draws the railways at there respective positions on the board
         lfont = pygame.font.Font('freesansbold.ttf',10)
         if self.locx == card_length/2:
             pygame.draw.rect(functions.gameDisplay,black,[0,self.locy-card_breadth/2,card_length,card_breadth],1)
@@ -203,7 +203,7 @@ class special_cards():
             functions.gameDisplay.fill(black, rect = [self.locx-card_breadth/2,display_height -  card_length,card_breadth,0.3*card_length])
             
         pygame.display.update()
-    def rcard(self):
+    def rcard(self):                            #this draws the card of the railway when called upon
         functions.gameDisplay.fill(white, rect = [170,400,200,250])
         lfont = pygame.font.Font('freesansbold.ttf',25)
         functions.text_in_box(self.name,lfont,black,170,410,200,30)
@@ -215,7 +215,7 @@ class special_cards():
         functions.message_to_screen("4 Railway      $20000",black,180,560,20)
         
         pygame.display.update()
-    def squares(self):
+    def squares(self):                      #this draws the links of the property on the respective owner boxes
         global tflag ,timer,temo
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
@@ -233,7 +233,7 @@ class special_cards():
                 if click[0]==1:
                     tflag = 1
                     temo = self
-
+#initialising special card's objects
 sproperty = {  "electric":special_cards("Electric Company",80000,card_length/2,7*card_breadth+card_breadth/2+card_length,display_height + gaph + c2gaph,gapv + 0.2*boxl + 5*cgapv + 4*cardh,display_height + gaph + c2gaph,2*gapv + boxl + 0.2*boxl + 5*cgapv + 4*cardh)
              , "water":special_cards("Water Works",70000,7*card_breadth+card_breadth/2+card_length,card_length/2,display_height + gaph + 2*c2gaph + cardl,gapv + 0.2*boxl + 5*cgapv + 4*cardh,display_height + gaph + 2*c2gaph + cardl,2*gapv + boxl + 0.2*boxl + 5*cgapv + 4*cardh)
              , "rail1":special_cards("Railway",40000,card_length + 9*card_breadth/2,display_height - card_length/2,display_height + gaph + boxb/2+  c3gaph,gapv + 0.2*boxl + 5*cgapv + 4*cardh,display_height + gaph + boxb/2+ c3gaph,2*gapv + boxl + 0.2*boxl + 5*cgapv + 4*cardh)
@@ -241,7 +241,7 @@ sproperty = {  "electric":special_cards("Electric Company",80000,card_length/2,7
              , "rail3":special_cards("Railway",40000,card_length + 9*card_breadth/2,card_length/2,display_height + gaph + boxb/2+  3*c3gaph + 2*cardl,gapv + 0.2*boxl + 5*cgapv + 4*cardh,display_height + gaph + boxb/2+ 3*c3gaph + 2*cardl,2*gapv + boxl + 0.2*boxl + 5*cgapv + 4*cardh)
              , "rail4":special_cards("Railway",40000,display_height - card_length/2,card_length + 9*card_breadth/2,display_height + gaph + boxb/2+  4*c3gaph + 3*cardl,gapv + 0.2*boxl + 5*cgapv + 4*cardh,display_height + gaph + boxb/2+ 4*c3gaph + 3*cardl,2*gapv + boxl + 0.2*boxl + 5*cgapv + 4*cardh)
             }
-
+#initialising the property objects
 _property = { "delhi":Property("Delhi",red,"India",card_length + card_breadth/2,card_length/2,80000,display_height + gaph + cgaph,gapv + 0.2*boxl + cgapv,display_height + gaph + cgaph,2*gapv + boxl + 0.2*boxl + cgapv )
             , "mumbai":Property("Mumbai",red,"India",card_length + 5*(card_breadth/2),card_length/2,60000,display_height + gaph + 2*cgaph + cardl,gapv + 0.2*boxl + cgapv,display_height + gaph + 2*cgaph + cardl,2*gapv + boxl + 0.2*boxl + cgapv )
             , "banglore":Property("Banglore",red,"India",card_length + 7*(card_breadth/2),card_length/2,40000,display_height + gaph + 3*cgaph + 2*cardl,gapv + 0.2*boxl + cgapv,display_height + gaph + 3*cgaph + 2*cardl,2*gapv + boxl + 0.2*boxl + cgapv )  

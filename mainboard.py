@@ -3,7 +3,7 @@ import functions,Property,player,firstpage
  
 
 pygame.init()
-
+#initialising all the hard coding values
 display_width = 1430
 display_height = 800
 card_length = 130
@@ -14,7 +14,7 @@ boxl = 350
 boxb = 215
 gapv = (display_height - 2*boxl)/3
 gaph = (display_width - display_height - 2*boxb)/3
-
+#initialising all the colour with the respective RGB values
 white = (255,255,255)
 black = (0,0,0)
 yellow = (255,255,0)
@@ -26,7 +26,7 @@ llblue = (0,160,160)
 maroon = (100,10,100)
 grey = (160,160,160)
 orange = (228,142,88)
-
+#initialising all the checkpoints used throughout the program
 player_index = 0
 rollonce = 0
 card_display = 0
@@ -47,12 +47,13 @@ temporary = 0
 chance = 0
 comm = 0
 gameover = 0
-
+timerr = 8
+risk = 0
 
 __font = pygame.font.Font('freesansbold.ttf',15)
 clock = pygame.time.Clock()
 
-
+#the main funtion
 def mainscreen():
     gameExit = False
 
@@ -61,13 +62,14 @@ def mainscreen():
             if event.type ==  pygame.QUIT:
                 gameExit = True
         
-        
+        #updating the screen again and again 
         drawing()
         clock.tick(40)    
                 
-           
+#this sketches the screen  
 def drawing():
-            global key,timer,incometax,gotojail,round_complete,cround,rent,railway,temporary,chance,rollonce,endturn
+    #global variables called
+            global key,timer,incometax,gotojail,round_complete,cround,rent,railway,temporary,chance,rollonce,endturn,timerr,risk
             functions.gameDisplay.fill(lblue)
             pygame.draw.rect(functions.gameDisplay, white, [0,0,display_height,display_height])
             functions.addimage('images/image.png',1100,150)
@@ -77,7 +79,7 @@ def drawing():
             pygame.draw.rect(functions.gameDisplay,white, [display_height + gaph,gapv,boxb,boxl])
             pygame.draw.rect(functions.gameDisplay,white, [display_height + gaph,boxl + 2*gapv,boxb,boxl])
             
-
+            #board sketched
             functions.addimage('images/go.png',display_height-card_length,display_height-card_length)
             functions.addimage('images/gotojail.png',display_height-card_length,0)
             functions.addimage('images/parking.png',0,0)
@@ -92,7 +94,7 @@ def drawing():
             functions.addimage('images/elec.png',0,7*card_breadth+card_length)
             functions.addimage('images/luxury.png',display_height-card_length,7*card_breadth+card_length)
             functions.addimage('images/income.png',card_length+5*card_breadth,display_height-card_length)
-
+            #sketching dice
             functions.text_in_box("Player %r's turn "%(player_index+1),_font,blue,card_length,card_length,(display_height-2*card_length)/2,blockh)
             if functions.a == 1:
                 functions.addimage('images/dice1.png',display_height/2 - 30,card_length + 10)
@@ -117,13 +119,14 @@ def drawing():
             if functions.b == 5:
                 functions.addimage('images/dice5.png',display_height/2 + 10,card_length + 10)
             if functions.b == 6:
-                functions.addimage('images/dice6.png',display_height/2 + 10,card_length + 10)   
+                functions.addimage('images/dice6.png',display_height/2 + 10,card_length + 10)
+                #sketching buttons
             Button("ROLL DICE",(display_height-blockl)/2,(display_height/2+card_length)/2 - 1.25*blockh,blockl,blockh,yellow,llblue,"roll",red)
-            Button("MORTGAGE",(display_height-blockl-card_length),(+card_length),blockl,blockh,red,llblue,"roll",yellow)
+            Button("MORTGAGE",(display_height-blockl-card_length),(+card_length),blockl,blockh,red,llblue,"mort",yellow)
             Button("END TURN",(display_height-blockl)/2,(display_height/2+card_length)/2 + 0.25*blockh,blockl,blockh,yellow,llblue,"endturn",red)
             Button("BUILD",(display_height-3*blockl)/2 - 0.2*blockl,(display_height/2+card_length)/2 - 0.5*blockh,blockl,blockh,yellow,llblue,"build",red)
             Button("SELL",(display_height+1*blockl)/2 + 0.2*blockl,(display_height/2+card_length)/2 - 0.5*blockh,blockl,blockh,yellow,llblue,"sell",red)
-            
+            #sketching properties on board
             Property._property["delhi"].locmaker()
             Property._property["mumbai"].locmaker()
             Property._property["banglore"].locmaker()
@@ -150,29 +153,47 @@ def drawing():
             Property.sproperty["rail2"].locmaker()
             Property.sproperty["rail3"].locmaker()
             Property.sproperty["rail4"].locmaker()
-            
+            _font_ = pygame.font.Font('freesansbold.ttf',50)
+            #checking if someone reached winning amount 
             if player.player[0].total_wealth >= firstpage.p[0].winamount or player.player[1].total_wealth >= firstpage.p[0].winamount:
                 rollonce = 1
                 endturn = 1
-                _font_ = pygame.font.Font('freesansbold.ttf',50)
+                
                 if player.player[0].total_wealth >= firstpage.p[0].winamount:
+                    functions.gameDisplay.fill(black)
                     functions.text_in_box("%r Won...Congratulations!!!"%firstpage.p[0].name,_font_,orange,card_length,(display_height/2+card_length)/2 + 1.25*blockh,display_height- 2*card_length,display_height/2 - ((display_height/2+card_length)/2 + 1.25*blockh))
 
                 if player.player[1].total_wealth >= firstpage.p[0].winamount:
+                    functions.gameDisplay.fill(black)
                     functions.text_in_box("%r Won...Congratulations!!!"%firstpage.p[1].name,_font_,orange,card_length,(display_height/2+card_length)/2 + 1.25*blockh,display_height- 2*card_length,display_height/2 - ((display_height/2+card_length)/2 + 1.25*blockh))
-
+            
+            if player.player[0].total_wealth <=0:
+                functions.gameDisplay.fill(black)
+                functions.text_in_box("%r Won...Congratulations!!!"%firstpage.p[1].name,_font_,orange,card_length,(display_height/2+card_length)/2 + 1.25*blockh,display_height- 2*card_length,display_height/2 - ((display_height/2+card_length)/2 + 1.25*blockh))
+            
+            if player.player[1].total_wealth <=0:
+                functions.gameDisplay.fill(black)
+                functions.text_in_box("%r Won...Congratulations!!!"%firstpage.p[0].name,_font_,orange,card_length,(display_height/2+card_length)/2 + 1.25*blockh,display_height- 2*card_length,display_height/2 - ((display_height/2+card_length)/2 + 1.25*blockh))
+            #checking if someone cash <=0
+            if player.player[player_index].cash < 0:
+                functions.text_in_box("%r ,You are lack of cash, sell your properties/houses"%firstpage.p[player_index].name,_font,orange,card_length,(display_height/2+card_length)/2 + 1.25*blockh,display_height- 2*card_length,display_height/2 - ((display_height/2+card_length)/2 + 1.25*blockh))
+                risk = 1
+                endturn = 1
+            if risk == 1 and player.player[player_index].cash > 0:
+                endturn = 0
+                
             if round_complete == 1:
                 functions.text_in_box("You Crossed Go , You gained $20000",__font,orange,card_length,(display_height/2+card_length)/2 + 1.25*blockh,display_height- 2*card_length,display_height/2 - ((display_height/2+card_length)/2 + 1.25*blockh))
-                if timer == 8:
+                if timerr == 8:
                     player.player[player_index].cash += 20000
                     player.player[player_index].total_wealth += 20000
                     cround[player_index]-=40
-                timer-=1
-                if timer == 0:
+                timerr-=1
+                if timerr == 0:
                         
                         round_complete = 0
-                        timer = 8
-
+                        timerr = 8
+#running different functions based on the call
             if spcard_display == 1:
                 spcard_displayy()
 
@@ -214,7 +235,7 @@ def drawing():
                         key = 1                               
             player.player[1].draw()
             player.player[0].draw()
-
+#sketching the players boxes
             for item,tempo in Property._property.items():
                 Property._property[item].squares()
             Property.sproperty["electric"].squares()
@@ -247,17 +268,17 @@ def drawing():
 
             pygame.display.update()       
 
-def Button(msg,x,y,l,h,ac,ic,function,tc):
-            global player_index,place,card_display,spcard_display,railway,rolloncejail,temporary
+def Button(msg,x,y,l,h,ac,ic,function,tc):                  #for drawing buttons 
+            global player_index,place,card_display,spcard_display,railway,rolloncejail,temporary,timer,timerr
             global rollonce,endturn,key,n,incometax,gotojail,cround,round_complete 
             pygame.draw.rect(functions.gameDisplay, ic, [x,y,l,h])
             mouse = pygame.mouse.get_pos()
             click = pygame.mouse.get_pressed()
-            if x < mouse[0] < x+l and y < mouse[1] < y+h:
+            if x < mouse[0] < x+l and y < mouse[1] < y+h:           
                 pygame.draw.rect(functions.gameDisplay, ac, [x,y,l,h])
-                if click[0]==1:
+                if click[0]==1:                     #checking if pressed
                     if function == "roll":
-                        if gotojail == 0 and player.player[player_index].released == 1 and rollonce == 0:
+                        if gotojail == 0 and player.player[player_index].released == 1 and rollonce == 0:           #diff working done based on the button pressed
                             n = functions.rolldice()
                             
                             cround[player_index] += n
@@ -274,7 +295,7 @@ def Button(msg,x,y,l,h,ac,ic,function,tc):
                             key = 4
                             endturn = 0
                             
-                    if function == "endturn" and endturn == 0:
+                    if function == "endturn" and endturn == 0:              #if endturn pressed
                         if player_index == 0:
                             player_index+=1
                         elif player_index == 1:
@@ -287,6 +308,8 @@ def Button(msg,x,y,l,h,ac,ic,function,tc):
                         Property.tflag = 0
                         spcard_display = 0
                         railway = 0
+                        timer = 8
+                        timerr = 8
                         
                     if function == "yes":
                         player.player[player_index].cash -= Property._property[place].cost
@@ -312,7 +335,21 @@ def Button(msg,x,y,l,h,ac,ic,function,tc):
                         card_display = 0
                         spcard_display = 0
                         railway = 0
-                        
+                    if function == "mort":
+                        vvalid = 1
+                        if Property.temo.owner != player_index or Property.temo.no_of_houses > 0:
+                            vvalid =0
+                        for xplace,tempo in Property._property.items():
+                            if Property._property[xplace].country == Property.temo.country:
+                                if Property._property[xplace].no_of_houses > 0 :
+                                    vvalid = 0
+                                    break
+                        if vvalid ==1:
+                            Property.temo.owner = None
+                            player.player[player_index].cash +=  Property.temo.mortgage
+                            player.player[player_index].total_wealth +=  Property.temo.mortgage
+                            player.player[player_index].total_wealth -=  Property.temo.cost
+                                
                     if function == "build":
                         valid = 1
                         if Property.temo.owner != player_index or Property.temo.no_of_houses == 4:
@@ -350,7 +387,7 @@ def Button(msg,x,y,l,h,ac,ic,function,tc):
             _font = pygame.font.Font('freesansbold.ttf',20)
             functions.text_in_box(msg, _font,tc,x,y,l,h)
 
-def working():
+def working():              #decides which checkpoints to on based on the players current position 
                 global player_index,place,card_display,spcard_display,railway,rolloncejail,temporary
                 global rollonce,endturn,key,n,incometax,gotojail,cround,round_complete,comm,chance
                 if cround[player_index] >= 40:
@@ -401,7 +438,7 @@ def working():
                     key = 0
                     temporary = 1
                 endturn = 0      
-def railways():
+def railways():         #respectve changes on screen if railways if concersnesd
                 global key,timer,incometax,gotojail,round_complete,cround,rent,railway,temporary
                 if Property.sproperty[place].owner != None and key == 0 and player_index != Property.sproperty[place].owner:
                     Property.sproperty[place].rcard()
@@ -436,7 +473,7 @@ def railways():
                     if timer == 0:
                         key = 1
                         timer = 8
-def spcard_displayy():
+def spcard_displayy():      #if playaer lands on utillies then the work happening on screeen 
                 global key,timer,incometax,gotojail,round_complete,cround,rent,railway,temporary
                 if Property.sproperty[place].owner != None and key == 0 and player_index != Property.sproperty[place].owner:
                     Property.sproperty[place].card()
@@ -470,7 +507,7 @@ def spcard_displayy():
                         key = 1
                         timer = 8
 
-def GoToJail():
+def GoToJail():  #if the player lands on gotojail
                 global key,timer,incometax,gotojail,round_complete,cround,rent,railway,temporary    
                 if temporary == 1:
                     player.player[player_index].released = 0
@@ -509,7 +546,7 @@ def GoToJail():
                         gotojail = 0
                         timer = 8
 
-def Prop():
+def Prop():         #if player lands on a property
                 global key,timer,incometax,gotojail,round_complete,cround,rent,railway,temporary 
                 if Property._property[place].owner != None and key == 0 and player_index != Property._property[place].owner:
                     Property._property[place].card()
@@ -535,25 +572,25 @@ def Prop():
                     if timer == 0:
                         key = 1
                         timer = 8
-timerr = 8                        
       
-def Chance():
+def Chance(): #if player lands on chance
     global key,timer,incometax,gotojail,round_complete,cround,rent,railway,temporary,chance,timerr 
     n = functions.a + functions.b
     if n == 2:
-        if timerr == 8:
+        if timer == 8:
             player.player[player_index].posx = display_height - card_length/2
             player.player[player_index].posy = display_height - card_length/2
             cround[player_index] = 40
             round_complete = 1
         functions.text_in_box("Go to our prime location GO and collect your reward money ;)",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
-        timerr -= 1
-        if timerr == 0:
-            timerr = 8
+        timer -= 1
+        if timer == 0:
+            timer = 8
             chance = 0
 
     if n == 3:
-        if timer == 8:
+        timer -= 1
+        if timer == 0:
             player.player[player_index].posx = card_length + card_breadth/2
             player.player[player_index].posy = display_height - card_length/2
             if cround[player_index]>9:
@@ -562,11 +599,12 @@ def Chance():
             else:
                 cround[player_index] = 9
         functions.text_in_box("You are given a free trip to Beijing ,Enjoy the delight of it!",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
-        working()
-        timer -= 1
+        
+        
         if timer == 0:
             timer = 8
             chance = 0
+            working()    
     if n == 4:
         if timer == 8:
             player.player[player_index].cash -= 10000
@@ -582,22 +620,25 @@ def Chance():
             player.player[player_index].posy = card_length/2
             
             cround[player_index] = 30
-            working()
+            
         functions.text_in_box("How Dare you burst crackers in front of parliament,living in India! Busted!!",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
         timer -= 1
         if timer == 0:
             timer = 8
             chance = 0
+            working()    
     if n == 6:
-        if timer == 8:
-            player.player[player_index].movement(37)
-            cround[player_index] = cround[player_index]%40
-            working()
-        functions.text_in_box("Earthquake expected! Go back three spaces",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
         timer -= 1
         if timer == 0:
+            player.player[player_index].movement(37)
+            cround[player_index] = cround[player_index]%40
+            
+        functions.text_in_box("Earthquake expected! Go back three spaces",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+        
+        if timer == 0:
             timer = 8
-            chance = 0            
+            chance = 0
+            working()
     if n == 7:
         if timer == 8:
             player.player[player_index].cash -= 30000
@@ -617,7 +658,8 @@ def Chance():
             timer = 8
             chance = 0
     if n == 9:
-        if timer == 8:
+        timer -= 2
+        if timer == 0:
             player.player[player_index].posx = card_length + card_breadth/2
             player.player[player_index].posy = card_length/2
             if cround[player_index]>21:
@@ -625,23 +667,26 @@ def Chance():
                 round_complete = 1
             else :
                 cround[player_index] = 21
-                
+                            
         functions.text_in_box("You are given a free trip to Delhi ,Enjoy the delight of it!",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
-        timer -= 1
+        
         if timer == 0:
             timer = 8
             chance = 0
+            working()    
     if n == 10:
-        if timer == 8:
+        timer -= 2
+        if timer == 0:
             player.player[player_index].posx = card_length/2 
             player.player[player_index].posy = display_height - card_length - 1.5*card_breadth
-            working()
+            
 
         functions.text_in_box("Go to Electric Company and feel the shock!",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
-        timer -= 1
+        
         if timer == 0:
             timer = 8
             chance = 0
+            working()    
     if n == 11:
         if timer == 8:
             player.player[player_index].cash += 30000
@@ -660,23 +705,24 @@ def Chance():
         if timer == 0:
             timer = 8
             chance = 0            
-def CommChest():
+def CommChest():   #if player lands on community chest
     global key,timer,incometax,gotojail,round_complete,cround,rent,railway,temporary,chance,comm,timerr  
     n = functions.a + functions.b
     if n == 2:
-        if timerr == 8:
+        if timer == 8:
             player.player[player_index].posx = display_height - card_length/2
             player.player[player_index].posy = display_height - card_length/2
             cround[player_index] = 40
             round_complete = 1
         functions.text_in_box("Go to our prime location GO and collect your reward money ;)",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
-        timerr -= 1
-        if timerr == 0:
-            timerr = 8
+        timer -= 1
+        if timer == 0:
+            timer = 8
             comm = 0
 
     if n == 3:
-        if timer == 8:
+        timer -= 2
+        if timer == 0:
             player.player[player_index].posx = card_length + card_breadth/2
             player.player[player_index].posy = display_height - card_length/2
             if cround[player_index]>9:
@@ -685,11 +731,12 @@ def CommChest():
             else:
                 cround[player_index] = 9
         functions.text_in_box("You are given a free trip to Beijing ,Enjoy the delight of it!",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
-        working()
-        timer -= 1
+        
+        
         if timer == 0:
             timer = 8
             comm = 0
+            working()    
     if n == 4:
         if timer == 8:
             player.player[player_index].cash -= 10000
@@ -700,27 +747,31 @@ def CommChest():
             timer = 8
             comm = 0
     if n == 5:
-        if timer == 8:
+        timer -= 2
+        if timer == 0:
             player.player[player_index].posx = display_height - card_length/2
             player.player[player_index].posy = card_length/2
             
             cround[player_index] = 30
-            working()
+            
         functions.text_in_box("How Dare you burst crackers in front of parliament,living in India! Busted!!",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
-        timer -= 1
+        
         if timer == 0:
             timer = 8
             comm = 0
+            working()    
     if n == 6:
-        if timer == 8:
+        timer -= 2
+        if timer == 0:
             player.player[player_index].movement(37)
             cround[player_index] = cround[player_index]%40
-            working()
+            
         functions.text_in_box("Earthquake expected! Go back three spaces",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
-        timer -= 1
+        
         if timer == 0:
             timer = 8
-            comm = 0            
+            comm = 0
+            working()    
     if n == 7:
         if timer == 8:
             player.player[player_index].cash -= 30000
@@ -740,7 +791,8 @@ def CommChest():
             timer = 8
             comm = 0
     if n == 9:
-        if timer == 8:
+        timer -= 2
+        if timer == 0:
             player.player[player_index].posx = card_length + card_breadth/2
             player.player[player_index].posy = card_length/2
             if cround[player_index]>21:
@@ -748,23 +800,26 @@ def CommChest():
                 round_complete = 1
             else :
                 cround[player_index] = 21
-                
+               
         functions.text_in_box("You are given a free trip to Delhi ,Enjoy the delight of it!",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
-        timer -= 1
+        
         if timer == 0:
             timer = 8
             comm = 0
+            working()     
     if n == 10:
-        if timer == 8:
+        timer -= 2
+        if timer == 0:
             player.player[player_index].posx = card_length/2 
             player.player[player_index].posy = display_height - card_length - 1.5*card_breadth
-            working()
+            
 
         functions.text_in_box("Go to Electric Company and feel the shock!",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
-        timer -= 1
+        
         if timer == 0:
             timer = 8
             comm = 0
+            working()    
     if n == 11:
         if timer == 8:
             player.player[player_index].cash += 30000

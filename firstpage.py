@@ -2,14 +2,14 @@
 class leaderboard():
     winamount = 600000
     def __init__(self):
-        self.rank = "1"
+        
         self.name = "Aniket"
-        self.rating = "0"
+        
         
     
 p = [leaderboard(),leaderboard()]
 
-def screen1(a,b,c):
+def screen1(a,b,c):    #for running screen 1
     import pygame
     global p
     import functions
@@ -52,11 +52,11 @@ def screen1(a,b,c):
         h=50
 
         functions.gameDisplay.fill(back)
-        img = pygame.image.load('images/monopolyimage.png')
+        img = pygame.image.load('images/monopolyimage.png')  #adding image
         functions.gameDisplay.blit(img, (200,0))
-       
+        #adding start button
         functions.button("START",x,y1,l,h,yellow,blue,"next",red)        
-        functions.button("LEADERBOARD",x,y2,l,h,yellow,blue,"leaderboard",red)
+        #adding quit button
         functions.button("QUIT",x,y3,l,h,yellow,blue,"quit1",red)
 
         

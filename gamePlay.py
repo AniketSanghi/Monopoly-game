@@ -6,16 +6,16 @@ p1name = None
 p2name = None
 winamount = None
 
-def screenn1():
+def screenn1():  #for running screen 1
     global p1name,p2name,winamount
     firstpage.screen1(p1name,p2name,winamount)
-def data():
+def data():  #for taking data
     global p1name,p2name,winamount
-    root = Tk()
-    root.title('Monopoly Love')
+    root = Tk()   #window created
+    root.title('Monopoly Love')#adding title
     intro = Label(root, text = 'Welcome to the amazing world of monopoly\n')
     intro.grid(row = 0, column = 0, sticky = E)
-
+    #creating text boxes and respective askers
     p1name = Label(root, text = 'Player 1 name: ')
     p2name = Label(root, text = 'Player 2 name: ')
     winamount = Label(root, text = 'Winning Amount: ')
