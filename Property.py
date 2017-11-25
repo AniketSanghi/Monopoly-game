@@ -43,17 +43,18 @@ clock = pygame.time.Clock()
 
 
 
-class Property():
+class Property():                                                                   #creating a class property which will contain all data of properties and their respective functions
 
-    def __init__(self,name,color,country,locx,locy,cost,x1,y1,x2,y2):
+    def __init__(self,name,color,country,locx,locy,cost,x1,y1,x2,y2):              #initialising every object(property) with its basic information
         self.name = name
         self.color = color
         self.country = country
         self.locx = locx
         self.locy = locy
         self.cost = cost
-        self.houses = [0.1*self.cost,0.4*self.cost,0.5*self.cost,0.6*self.cost,self.cost]
+        self.houses = [0.1*self.cost,0.4*self.cost,0.5*self.cost,0.6*self.cost,self.cost]    #A list keeping track of rents to be paid v/s no. of houses
         self.mortgage = 0.4*self.cost
+        self.mort = 0
         self.no_of_houses = 0
         self.owner = None
         self.x1 = x1
@@ -172,7 +173,7 @@ class special_cards():
         functions.message_to_screen("If both utilities are owned",black,180,520,20)
         functions.message_to_screen("Rent = 3000*(sum on dice)",black,180,540,20)
         
-        functions.message_to_screen("Mortgage value: $ %d"%self.mortgage,black,190,600,20)
+        
         pygame.display.update()
         
     def locmaker(self):
@@ -212,7 +213,7 @@ class special_cards():
         functions.message_to_screen("2 Railway      $5000",black,180,520,20)
         functions.message_to_screen("3 Railway      $10000",black,180,540,20)
         functions.message_to_screen("4 Railway      $20000",black,180,560,20)
-        functions.message_to_screen("Mortgage value: $ %d"%self.mortgage,black,190,600,20)
+        
         pygame.display.update()
     def squares(self):
         global tflag ,timer,temo

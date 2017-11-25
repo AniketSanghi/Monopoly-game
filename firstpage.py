@@ -1,26 +1,41 @@
-import pygame
-import secondpage
-import functions
 
-pygame.init()
-
-display_width = 1430
-display_height = 800
-
-white = (255,255,255)
-black = (0,0,0)
-yellow = (255,255,0)
-red = (255,50,0)
-blue = (0,0,255)
-green = (0,255,0)
-back = (100,10,100)
-
-
-
-
-
-def screen1():
+class leaderboard():
+    winamount = 600000
+    def __init__(self):
+        self.rank = "1"
+        self.name = "Aniket"
+        self.rating = "0"
+        
     
+p = [leaderboard(),leaderboard()]
+
+def screen1(a,b,c):
+    import pygame
+    global p
+    import functions
+    leaderboard.winamount = (int)(c.get())
+    p[1].name = b.get()
+    p[0].name = a.get()
+
+
+
+
+
+    
+    pygame.init()
+
+    display_width = 1430
+    display_height = 800
+
+    white = (255,255,255)
+    black = (0,0,0)
+    yellow = (255,255,0)
+    red = (255,50,0)
+    blue = (0,0,255)
+    green = (0,255,0)
+    back = (100,10,100)
+
+
 
     gameExit = False
 
@@ -40,7 +55,7 @@ def screen1():
         img = pygame.image.load('images/monopolyimage.png')
         functions.gameDisplay.blit(img, (200,0))
        
-        functions.button("START",x,y1,l,h,yellow,blue,"screen2",red)        
+        functions.button("START",x,y1,l,h,yellow,blue,"next",red)        
         functions.button("LEADERBOARD",x,y2,l,h,yellow,blue,"leaderboard",red)
         functions.button("QUIT",x,y3,l,h,yellow,blue,"quit1",red)
 

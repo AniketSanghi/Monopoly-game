@@ -1,5 +1,5 @@
 import pygame,time
-import functions,Property,player
+import functions,Property,player,firstpage
  
 
 pygame.init()
@@ -44,7 +44,12 @@ railway = 0
 rent = 0
 rolloncejail = 0
 temporary = 0
+chance = 0
+comm = 0
+gameover = 0
 
+
+__font = pygame.font.Font('freesansbold.ttf',15)
 clock = pygame.time.Clock()
 
 
@@ -58,14 +63,15 @@ def mainscreen():
         
         
         drawing()
-        clock.tick(15)    
+        clock.tick(40)    
                 
            
 def drawing():
-            global key,timer,incometax,gotojail,round_complete,cround,rent,railway,temporary
+            global key,timer,incometax,gotojail,round_complete,cround,rent,railway,temporary,chance,rollonce,endturn
             functions.gameDisplay.fill(lblue)
             pygame.draw.rect(functions.gameDisplay, white, [0,0,display_height,display_height])
-            functions.addimage('images/back.png',card_length,card_length)
+            functions.addimage('images/image.png',1100,150)
+            pygame.draw.rect(functions.gameDisplay, black, [card_length,card_length,display_height-2*card_length,display_height - 2*card_length])
             _font = pygame.font.Font('freesansbold.ttf',20)
 
             pygame.draw.rect(functions.gameDisplay,white, [display_height + gaph,gapv,boxb,boxl])
@@ -88,9 +94,32 @@ def drawing():
             functions.addimage('images/income.png',card_length+5*card_breadth,display_height-card_length)
 
             functions.text_in_box("Player %r's turn "%(player_index+1),_font,blue,card_length,card_length,(display_height-2*card_length)/2,blockh)
-            functions.text_in_box("( %r , %r )"%(functions.a,functions.b),_font,blue,card_length,card_length,display_height-2*card_length,blockh)
-
-            Button("ROLE DICE",(display_height-blockl)/2,(display_height/2+card_length)/2 - 1.25*blockh,blockl,blockh,yellow,llblue,"roll",red)
+            if functions.a == 1:
+                functions.addimage('images/dice1.png',display_height/2 - 30,card_length + 10)
+            if functions.a == 2:
+                functions.addimage('images/dice2.png',display_height/2 - 30,card_length + 10)
+            if functions.a == 3:
+                functions.addimage('images/dice3.png',display_height/2 - 30,card_length + 10)
+            if functions.a == 4:
+                functions.addimage('images/dice4.png',display_height/2 - 30,card_length + 10)
+            if functions.a == 5:
+                functions.addimage('images/dice5.png',display_height/2 - 30,card_length + 10)
+            if functions.a == 6:
+                functions.addimage('images/dice6.png',display_height/2 - 30,card_length + 10)
+            if functions.b== 1:
+                functions.addimage('images/dice1.png',display_height/2 + 10,card_length + 10)
+            if functions.b == 2:
+                functions.addimage('images/dice2.png',display_height/2 + 10,card_length + 10)
+            if functions.b == 3:
+                functions.addimage('images/dice3.png',display_height/2 + 10,card_length + 10)
+            if functions.b == 4:
+                functions.addimage('images/dice4.png',display_height/2 + 10,card_length + 10)
+            if functions.b == 5:
+                functions.addimage('images/dice5.png',display_height/2 + 10,card_length + 10)
+            if functions.b == 6:
+                functions.addimage('images/dice6.png',display_height/2 + 10,card_length + 10)   
+            Button("ROLL DICE",(display_height-blockl)/2,(display_height/2+card_length)/2 - 1.25*blockh,blockl,blockh,yellow,llblue,"roll",red)
+            Button("MORTGAGE",(display_height-blockl-card_length),(+card_length),blockl,blockh,red,llblue,"roll",yellow)
             Button("END TURN",(display_height-blockl)/2,(display_height/2+card_length)/2 + 0.25*blockh,blockl,blockh,yellow,llblue,"endturn",red)
             Button("BUILD",(display_height-3*blockl)/2 - 0.2*blockl,(display_height/2+card_length)/2 - 0.5*blockh,blockl,blockh,yellow,llblue,"build",red)
             Button("SELL",(display_height+1*blockl)/2 + 0.2*blockl,(display_height/2+card_length)/2 - 0.5*blockh,blockl,blockh,yellow,llblue,"sell",red)
@@ -122,7 +151,15 @@ def drawing():
             Property.sproperty["rail3"].locmaker()
             Property.sproperty["rail4"].locmaker()
             
-            __font = pygame.font.Font('freesansbold.ttf',15)
+            if player.player[0].total_wealth >= firstpage.p[0].winamount or player.player[1].total_wealth >= firstpage.p[0].winamount:
+                rollonce = 1
+                endturn = 1
+                _font_ = pygame.font.Font('freesansbold.ttf',50)
+                if player.player[0].total_wealth >= firstpage.p[0].winamount:
+                    functions.text_in_box("%r Won...Congratulations!!!"%firstpage.p[0].name,_font_,orange,card_length,(display_height/2+card_length)/2 + 1.25*blockh,display_height- 2*card_length,display_height/2 - ((display_height/2+card_length)/2 + 1.25*blockh))
+
+                if player.player[1].total_wealth >= firstpage.p[0].winamount:
+                    functions.text_in_box("%r Won...Congratulations!!!"%firstpage.p[1].name,_font_,orange,card_length,(display_height/2+card_length)/2 + 1.25*blockh,display_height- 2*card_length,display_height/2 - ((display_height/2+card_length)/2 + 1.25*blockh))
 
             if round_complete == 1:
                 functions.text_in_box("You Crossed Go , You gained $20000",__font,orange,card_length,(display_height/2+card_length)/2 + 1.25*blockh,display_height- 2*card_length,display_height/2 - ((display_height/2+card_length)/2 + 1.25*blockh))
@@ -137,104 +174,19 @@ def drawing():
                         timer = 8
 
             if spcard_display == 1:
-                if Property.sproperty[place].owner != None and key == 0 and player_index != Property.sproperty[place].owner:
-                    Property.sproperty[place].card()
-                    
-                    if timer == 8:
-
-                        dice_sum = functions.a + functions.b
-                        if Property.sproperty["electric"].owner == Property.sproperty["water"].owner:
-                            rent = 3000*dice_sum
-                        else:
-                            rent = 1000*dice_sum
-                        player.player[player_index].cash -= rent
-                        player.player[player_index].total_wealth -= rent
-                        player.player[Property.sproperty[place].owner].cash += rent
-                        player.player[Property.sproperty[place].owner].total_wealth += rent
-                    functions.text_in_box("You paid rent of %r to player %r?"%(rent,Property.sproperty[place].owner+1),__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
-                    timer -= 1
-                    if timer == 0:
-                        key = 1
-                        timer = 8
-                if Property.sproperty[place].owner == None and key == 0:
-                    Property.sproperty[place].card()
-                    functions.text_in_box("Do you want to purchase %r ?"%Property.sproperty[place].name,__font,orange,display_height/2,display_height/2 - blockh,display_height/2-card_length,display_height/2-card_length)
-                    Button("YES",display_height*3/4 - card_length/2-blockl,display_height*3/4 - card_length/2 + blockh/2,blockl/2,blockh,yellow,llblue,"Yes",red)
-                    Button("NO",display_height*3/4 - card_length/2 + blockl/2,display_height*3/4 - card_length/2 + blockh/2,blockl/2,blockh,yellow,llblue,"no",red)
-                if key == 2:
-                    Property.sproperty[place].card()
-                    functions.text_in_box("Successfully purchased %r"%(Property.sproperty[place].name),__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
-                    timer -= 1
-                    if timer == 0:
-                        key = 1
-                        timer = 8
-
+                spcard_displayy()
 
             if railway == 1:
-                if Property.sproperty[place].owner != None and key == 0 and player_index != Property.sproperty[place].owner:
-                    Property.sproperty[place].rcard()
-                    
-                    if timer == 8:
-                        if player.player[Property.sproperty[place].owner].no_of_railways == 1:
-                            rent = 2500
-                        if player.player[Property.sproperty[place].owner].no_of_railways == 2:
-                            rent = 5000
-                        if player.player[Property.sproperty[place].owner].no_of_railways == 3:
-                            rent = 10000
-                        if player.player[Property.sproperty[place].owner].no_of_railways == 4:
-                            rent = 20000
-                        player.player[player_index].cash -= rent
-                        player.player[player_index].total_wealth -= rent
-                        player.player[Property.sproperty[place].owner].cash += rent
-                        player.player[Property.sproperty[place].owner].total_wealth += rent
-                    functions.text_in_box("You paid rent of %r to player %r?"%(rent,Property.sproperty[place].owner+1),__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
-                    timer -= 1
-                    if timer == 0:
-                        key = 1
-                        timer = 8
-                if Property.sproperty[place].owner == None and key == 0:
-                    Property.sproperty[place].rcard()
-                    functions.text_in_box("Do you want to purchase %r ?"%Property.sproperty[place].name,__font,orange,display_height/2,display_height/2 - blockh,display_height/2-card_length,display_height/2-card_length)
-                    Button("YES",display_height*3/4 - card_length/2-blockl,display_height*3/4 - card_length/2 + blockh/2,blockl/2,blockh,yellow,llblue,"YeS",red)
-                    Button("NO",display_height*3/4 - card_length/2 + blockl/2,display_height*3/4 - card_length/2 + blockh/2,blockl/2,blockh,yellow,llblue,"no",red)
-                if key == 2:
-                    Property.sproperty[place].rcard()
-                    functions.text_in_box("Successfully purchased %r"%(Property.sproperty[place].name),__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
-                    timer -= 1
-                    if timer == 0:
-                        key = 1
-                        timer = 8
-
-
-
-
+                railways()
 
             if card_display == 1:
-                if Property._property[place].owner != None and key == 0 and player_index != Property._property[place].owner:
-                    Property._property[place].card()
-                    if timer == 8:
-                        player.player[player_index].cash -= Property._property[place].houses[Property._property[place].no_of_houses]
-                        player.player[player_index].total_wealth -= Property._property[place].houses[Property._property[place].no_of_houses]
-                        player.player[Property._property[place].owner].cash += Property._property[place].houses[Property._property[place].no_of_houses]
-                        player.player[Property._property[place].owner].total_wealth += Property._property[place].houses[Property._property[place].no_of_houses]
-                    functions.text_in_box("You paid rent of %r to player %r?"%(Property._property[place].houses[Property._property[place].no_of_houses],Property._property[place].owner+1),__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
-                    timer -= 1
-                    if timer == 0:
-                        key = 1
-                        timer = 8
-                if Property._property[place].owner == None and key == 0:
-                    Property._property[place].card()
-                    functions.text_in_box("Do you want to purchase %r ?"%Property._property[place].name,__font,orange,display_height/2,display_height/2 - blockh,display_height/2-card_length,display_height/2-card_length)
-                    Button("YES",display_height*3/4 - card_length/2-blockl,display_height*3/4 - card_length/2 + blockh/2,blockl/2,blockh,yellow,llblue,"yes",red)
-                    Button("NO",display_height*3/4 - card_length/2 + blockl/2,display_height*3/4 - card_length/2 + blockh/2,blockl/2,blockh,yellow,llblue,"no",red)
-                if key == 2:
-                    Property._property[place].card()
-                    functions.text_in_box("Successfully purchased %r"%(Property._property[place].name),__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
-                    timer -= 1
-                    if timer == 0:
-                        key = 1
-                        timer = 8
-            
+                Prop()
+
+            if chance == 1:
+                Chance()
+            if comm == 1:
+                CommChest()
+          
 
             if incometax == 1:
                 if key == 0:
@@ -280,51 +232,16 @@ def drawing():
                     Property.temo.card()
                 
             if gotojail == 1:
-                if temporary == 1:
-                    player.player[player_index].released = 0
-                    temporary = 0 
-                if key == 0:
-                    timer -= 2
-                    functions.text_in_box("Alert! You are caught... BUSTED!",__font,orange,card_length,(display_height/2+card_length)/2 + 1.25*blockh,display_height- 2*card_length,display_height/2 - ((display_height/2+card_length)/2 + 1.25*blockh))
-                    if timer == 0:
-                        key = 1
-                        timer = 8
-                if key == 1 or key == 0:
-                    Button("Pay $5000 and come out",card_length + 0.1*(display_height - 2*card_length),display_height/2,0.8*(display_height - 2*card_length),blockh,yellow,llblue,"pay",red)
-                    Button("Roll dice for a double",card_length + 0.1*(display_height - 2*card_length),display_height/2 + 2*blockh,0.8*(display_height - 2*card_length),blockh,yellow,llblue,"roll_for_double",red)
-                
-                if key == 3:
-                    functions.text_in_box("Roll your dice once",__font,orange,card_length,(display_height/2+card_length)/2 + 1.25*blockh,display_height- 2*card_length,display_height/2 - ((display_height/2+card_length)/2 + 1.25*blockh))
-                if key == 4 and player.player[player_index].released == 1:
-                    timer -= 2
-                    functions.text_in_box("Lucky Guy! You are released!",__font,orange,card_length,(display_height/2+card_length)/2 + 1.25*blockh,display_height- 2*card_length,display_height/2 - ((display_height/2+card_length)/2 + 1.25*blockh))
-                    if timer == 0:
-                        key = 1
-                        gotojail = 0
-                        timer = 8
-                if key == 4 and player.player[player_index].released == 0:
-                    timer -= 2
-                    functions.text_in_box("Better Luck next time!",__font,orange,card_length,(display_height/2+card_length)/2 + 1.25*blockh,display_height- 2*card_length,display_height/2 - ((display_height/2+card_length)/2 + 1.25*blockh))
-                    if timer == 0:
-                        key = 1
-                        gotojail = 0
-                        timer = 8
-                if key == 5:
-                    timer -= 2
-                    functions.text_in_box("You are released after giving a bail of $5000",__font,orange,card_length,(display_height/2+card_length)/2 + 1.25*blockh,display_height- 2*card_length,display_height/2 - ((display_height/2+card_length)/2 + 1.25*blockh))
-                    if timer == 0:
-                        key = 1
-                        gotojail = 0
-                        timer = 8
+                GoToJail()
 
 
 
                 
 
-            functions.text_in_box("Player 1",_font,maroon,display_height + gaph,gapv,boxb,0.1*boxl)
+            functions.text_in_box(firstpage.p[0].name,_font,maroon,display_height + gaph,gapv,boxb,0.1*boxl)
             functions.text_in_box("Cash %r"%player.player[0].cash,_font,maroon,display_height + gaph,gapv + 0.1*boxl ,boxb,0.1*boxl)
             functions.text_in_box("Net Worth %r"%player.player[0].total_wealth,_font,maroon,display_height + gaph,gapv+0.9*boxl,boxb,0.1*boxl)
-            functions.text_in_box("Player 2",_font,maroon,display_height + gaph,2*gapv + boxl,boxb,0.1*boxl)
+            functions.text_in_box(firstpage.p[1].name,_font,maroon,display_height + gaph,2*gapv + boxl,boxb,0.1*boxl)
             functions.text_in_box("Cash %r"%player.player[1].cash,_font,maroon,display_height + gaph,2*gapv+boxl + 0.1*boxl ,boxb,0.1*boxl)
             functions.text_in_box("Net Worth %r"%player.player[1].total_wealth,_font,maroon,display_height + gaph,2*gapv+boxl+0.9*boxl,boxb,0.1*boxl)
 
@@ -347,50 +264,8 @@ def Button(msg,x,y,l,h,ac,ic,function,tc):
                             player.player[player_index].movement(n)
                             rollonce = 1
 
-                            if cround[player_index] >= 40:
-                                round_complete = 1
+                            working()
                             
-                            for tplace,tempo in Property._property.items():
-                                if Property._property[tplace].locx == player.player[player_index].posx and Property._property[tplace].locy == player.player[player_index].posy:
-                                    card_display = 1
-                                    key = 0
-                                    place = tplace
-
-                            if (player.player[player_index].posx == Property.sproperty["electric"].locx and Property.sproperty["electric"].locy == player.player[player_index].posy) or (player.player[player_index].posx == Property.sproperty["water"].locx and Property.sproperty["water"].locy == player.player[player.index].posy):
-                                if player.player[player_index].posx == Property.sproperty["electric"].locx:
-                                    place = "electric"
-                                elif player.player[player_index].posx == Property.sproperty["water"].locy:
-                                    place = "water"
-                                spcard_display = 1
-                                key = 0
-
-                            if (player.player[player_index].posx == Property.sproperty["rail1"].locx  and Property.sproperty["rail1"].locy == player.player[player_index].posy) or (player.player[player_index].posx == Property.sproperty["rail2"].locx  and Property.sproperty["rail2"].locy == player.player[player_index].posy) or (player.player[player_index].posx == Property.sproperty["rail3"].locx  and Property.sproperty["rail3"].locy == player.player[player_index].posy) or (player.player[player_index].posx == Property.sproperty["rail4"].locx  and Property.sproperty["rail4"].locy == player.player[player_index].posy):
-                                if (player.player[player_index].posx == Property.sproperty["rail1"].locx  and Property.sproperty["rail1"].locy == player.player[player_index].posy):
-                                    place = "rail1"
-                                elif (player.player[player_index].posx == Property.sproperty["rail2"].locx  and Property.sproperty["rail2"].locy == player.player[player_index].posy):
-                                    place = "rail2"
-                                elif (player.player[player_index].posx == Property.sproperty["rail3"].locx  and Property.sproperty["rail3"].locy == player.player[player_index].posy):
-                                    place = "rail3"
-                                elif (player.player[player_index].posx == Property.sproperty["rail4"].locx  and Property.sproperty["rail4"].locy == player.player[player_index].posy):
-                                    place = "rail4"
-                                railway = 1
-                                key = 0
-                                
-                            if player.player[player_index].posx == (card_length+5*card_breadth + 0.5*card_breadth) and player.player[player_index].posy == (display_height-card_length/2):
-                                incometax = 1
-                                key = 0
-                            if player.player[player_index].posx == display_height-card_length/2 and player.player[player_index].posy == 7*card_breadth+card_length+0.5*card_breadth :
-                                incometax = 2
-                                key = 0
-                            if player.player[player_index].posx == display_height-card_length/2 and player.player[player_index].posy == card_length/2:
-                                
-                                player.player[player_index].posx = card_length/2
-                                player.player[player_index].posy = display_height-card_length/2
-                                cround[player_index] -= 20
-                                gotojail = 1
-                                key = 0
-                                temporary = 1
-                            endturn = 0   
                         if gotojail == 1 and player.player[player_index].released == 0 and key == 3 and rolloncejail == 0:
                             n = functions.rolldice()
                             if functions.a == functions.b:
@@ -475,3 +350,436 @@ def Button(msg,x,y,l,h,ac,ic,function,tc):
             _font = pygame.font.Font('freesansbold.ttf',20)
             functions.text_in_box(msg, _font,tc,x,y,l,h)
 
+def working():
+                global player_index,place,card_display,spcard_display,railway,rolloncejail,temporary
+                global rollonce,endturn,key,n,incometax,gotojail,cround,round_complete,comm,chance
+                if cround[player_index] >= 40:
+                    round_complete = 1
+                            
+                for tplace,tempo in Property._property.items():
+                    if Property._property[tplace].locx == player.player[player_index].posx and Property._property[tplace].locy == player.player[player_index].posy:
+                        card_display = 1
+                        key = 0
+                        place = tplace
+                if (player.player[player_index].posx == card_length+2.5*card_breadth and display_height-card_length/2 == player.player[player_index].posy) or (player.player[player_index].posx == card_length+1.5*card_breadth and card_length/2 == player.player[player_index].posy) or (player.player[player_index].posx == display_height - card_length/2 and card_length + 5.5*card_breadth == player.player[player_index].posy):
+                    chance = 1
+                if (player.player[player_index].posx == card_length+7.5*card_breadth and display_height-card_length/2 == player.player[player_index].posy) or (player.player[player_index].posx == card_length/2 and card_length + 2.5*card_breadth  == player.player[player_index].posy) or (player.player[player_index].posx == display_height - card_length/2 and card_length + 2.5*card_breadth == player.player[player_index].posy):
+                    comm = 1    
+
+                if (player.player[player_index].posx == Property.sproperty["electric"].locx and Property.sproperty["electric"].locy == player.player[player_index].posy) or (player.player[player_index].posx == Property.sproperty["water"].locx and Property.sproperty["water"].locy == player.player[player_index].posy):
+                    if player.player[player_index].posx == Property.sproperty["electric"].locx:
+                        place = "electric"
+                    elif player.player[player_index].posx == Property.sproperty["water"].locy:
+                        place = "water"
+                    spcard_display = 1
+                    key = 0
+
+                if (player.player[player_index].posx == Property.sproperty["rail1"].locx  and Property.sproperty["rail1"].locy == player.player[player_index].posy) or (player.player[player_index].posx == Property.sproperty["rail2"].locx  and Property.sproperty["rail2"].locy == player.player[player_index].posy) or (player.player[player_index].posx == Property.sproperty["rail3"].locx  and Property.sproperty["rail3"].locy == player.player[player_index].posy) or (player.player[player_index].posx == Property.sproperty["rail4"].locx  and Property.sproperty["rail4"].locy == player.player[player_index].posy):
+                    if (player.player[player_index].posx == Property.sproperty["rail1"].locx  and Property.sproperty["rail1"].locy == player.player[player_index].posy):
+                        place = "rail1"
+                    elif (player.player[player_index].posx == Property.sproperty["rail2"].locx  and Property.sproperty["rail2"].locy == player.player[player_index].posy):
+                        place = "rail2"
+                    elif (player.player[player_index].posx == Property.sproperty["rail3"].locx  and Property.sproperty["rail3"].locy == player.player[player_index].posy):
+                        place = "rail3"
+                    elif (player.player[player_index].posx == Property.sproperty["rail4"].locx  and Property.sproperty["rail4"].locy == player.player[player_index].posy):
+                        place = "rail4"
+                    railway = 1
+                    key = 0
+                                
+                if player.player[player_index].posx == (card_length+5*card_breadth + 0.5*card_breadth) and player.player[player_index].posy == (display_height-card_length/2):
+                    incometax = 1
+                    key = 0
+                if player.player[player_index].posx == display_height-card_length/2 and player.player[player_index].posy == 7*card_breadth+card_length+0.5*card_breadth :
+                    incometax = 2
+                    key = 0
+                if player.player[player_index].posx == display_height-card_length/2 and player.player[player_index].posy == card_length/2:
+                                
+                    player.player[player_index].posx = card_length/2
+                    player.player[player_index].posy = display_height-card_length/2
+                    cround[player_index] -= 20
+                    gotojail = 1
+                    key = 0
+                    temporary = 1
+                endturn = 0      
+def railways():
+                global key,timer,incometax,gotojail,round_complete,cround,rent,railway,temporary
+                if Property.sproperty[place].owner != None and key == 0 and player_index != Property.sproperty[place].owner:
+                    Property.sproperty[place].rcard()
+                    
+                    if timer == 8:
+                        if player.player[Property.sproperty[place].owner].no_of_railways == 1:
+                            rent = 2500
+                        if player.player[Property.sproperty[place].owner].no_of_railways == 2:
+                            rent = 5000
+                        if player.player[Property.sproperty[place].owner].no_of_railways == 3:
+                            rent = 10000
+                        if player.player[Property.sproperty[place].owner].no_of_railways == 4:
+                            rent = 20000
+                        player.player[player_index].cash -= rent
+                        player.player[player_index].total_wealth -= rent
+                        player.player[Property.sproperty[place].owner].cash += rent
+                        player.player[Property.sproperty[place].owner].total_wealth += rent
+                    functions.text_in_box("You paid rent of %r to player %r?"%(rent,Property.sproperty[place].owner+1),__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+                    timer -= 1
+                    if timer == 0:
+                        key = 1
+                        timer = 8
+                if Property.sproperty[place].owner == None and key == 0:
+                    Property.sproperty[place].rcard()
+                    functions.text_in_box("Do you want to purchase %r ?"%Property.sproperty[place].name,__font,orange,display_height/2,display_height/2 - blockh,display_height/2-card_length,display_height/2-card_length)
+                    Button("YES",display_height*3/4 - card_length/2-blockl,display_height*3/4 - card_length/2 + blockh/2,blockl/2,blockh,yellow,llblue,"YeS",red)
+                    Button("NO",display_height*3/4 - card_length/2 + blockl/2,display_height*3/4 - card_length/2 + blockh/2,blockl/2,blockh,yellow,llblue,"no",red)
+                if key == 2:
+                    Property.sproperty[place].rcard()
+                    functions.text_in_box("Successfully purchased %r"%(Property.sproperty[place].name),__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+                    timer -= 1
+                    if timer == 0:
+                        key = 1
+                        timer = 8
+def spcard_displayy():
+                global key,timer,incometax,gotojail,round_complete,cround,rent,railway,temporary
+                if Property.sproperty[place].owner != None and key == 0 and player_index != Property.sproperty[place].owner:
+                    Property.sproperty[place].card()
+                    
+                    if timer == 8:
+
+                        dice_sum = functions.a + functions.b
+                        if Property.sproperty["electric"].owner == Property.sproperty["water"].owner:
+                            rent = 3000*dice_sum
+                        else:
+                            rent = 1000*dice_sum
+                        player.player[player_index].cash -= rent
+                        player.player[player_index].total_wealth -= rent
+                        player.player[Property.sproperty[place].owner].cash += rent
+                        player.player[Property.sproperty[place].owner].total_wealth += rent
+                    functions.text_in_box("You paid rent of %r to player %r?"%(rent,Property.sproperty[place].owner+1),__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+                    timer -= 1
+                    if timer == 0:
+                        key = 1
+                        timer = 8
+                if Property.sproperty[place].owner == None and key == 0:
+                    Property.sproperty[place].card()
+                    functions.text_in_box("Do you want to purchase %r ?"%Property.sproperty[place].name,__font,orange,display_height/2,display_height/2 - blockh,display_height/2-card_length,display_height/2-card_length)
+                    Button("YES",display_height*3/4 - card_length/2-blockl,display_height*3/4 - card_length/2 + blockh/2,blockl/2,blockh,yellow,llblue,"Yes",red)
+                    Button("NO",display_height*3/4 - card_length/2 + blockl/2,display_height*3/4 - card_length/2 + blockh/2,blockl/2,blockh,yellow,llblue,"no",red)
+                if key == 2:
+                    Property.sproperty[place].card()
+                    functions.text_in_box("Successfully purchased %r"%(Property.sproperty[place].name),__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+                    timer -= 1
+                    if timer == 0:
+                        key = 1
+                        timer = 8
+
+def GoToJail():
+                global key,timer,incometax,gotojail,round_complete,cround,rent,railway,temporary    
+                if temporary == 1:
+                    player.player[player_index].released = 0
+                    temporary = 0 
+                if key == 0:
+                    timer -= 2
+                    functions.text_in_box("Alert! You are caught... BUSTED!",__font,orange,card_length,(display_height/2+card_length)/2 + 1.25*blockh,display_height- 2*card_length,display_height/2 - ((display_height/2+card_length)/2 + 1.25*blockh))
+                    if timer == 0:
+                        key = 1
+                        timer = 8
+                if key == 1 or key == 0:
+                    Button("Pay $5000 and come out",card_length + 0.1*(display_height - 2*card_length),display_height/2,0.8*(display_height - 2*card_length),blockh,yellow,llblue,"pay",red)
+                    Button("Roll dice for a double",card_length + 0.1*(display_height - 2*card_length),display_height/2 + 2*blockh,0.8*(display_height - 2*card_length),blockh,yellow,llblue,"roll_for_double",red)
+                
+                if key == 3:
+                    functions.text_in_box("Roll your dice once",__font,orange,card_length,(display_height/2+card_length)/2 + 1.25*blockh,display_height- 2*card_length,display_height/2 - ((display_height/2+card_length)/2 + 1.25*blockh))
+                if key == 4 and player.player[player_index].released == 1:
+                    timer -= 2
+                    functions.text_in_box("Lucky Guy! You are released!",__font,orange,card_length,(display_height/2+card_length)/2 + 1.25*blockh,display_height- 2*card_length,display_height/2 - ((display_height/2+card_length)/2 + 1.25*blockh))
+                    if timer == 0:
+                        key = 1
+                        gotojail = 0
+                        timer = 8
+                if key == 4 and player.player[player_index].released == 0:
+                    timer -= 2
+                    functions.text_in_box("Better Luck next time!",__font,orange,card_length,(display_height/2+card_length)/2 + 1.25*blockh,display_height- 2*card_length,display_height/2 - ((display_height/2+card_length)/2 + 1.25*blockh))
+                    if timer == 0:
+                        key = 1
+                        gotojail = 0
+                        timer = 8
+                if key == 5:
+                    timer -= 2
+                    functions.text_in_box("You are released after giving a bail of $5000",__font,orange,card_length,(display_height/2+card_length)/2 + 1.25*blockh,display_height- 2*card_length,display_height/2 - ((display_height/2+card_length)/2 + 1.25*blockh))
+                    if timer == 0:
+                        key = 1
+                        gotojail = 0
+                        timer = 8
+
+def Prop():
+                global key,timer,incometax,gotojail,round_complete,cround,rent,railway,temporary 
+                if Property._property[place].owner != None and key == 0 and player_index != Property._property[place].owner:
+                    Property._property[place].card()
+                    if timer == 8:
+                        player.player[player_index].cash -= Property._property[place].houses[Property._property[place].no_of_houses]
+                        player.player[player_index].total_wealth -= Property._property[place].houses[Property._property[place].no_of_houses]
+                        player.player[Property._property[place].owner].cash += Property._property[place].houses[Property._property[place].no_of_houses]
+                        player.player[Property._property[place].owner].total_wealth += Property._property[place].houses[Property._property[place].no_of_houses]
+                    functions.text_in_box("You paid rent of %r to player %r?"%(Property._property[place].houses[Property._property[place].no_of_houses],Property._property[place].owner+1),__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+                    timer -= 1
+                    if timer == 0:
+                        key = 1
+                        timer = 8
+                if Property._property[place].owner == None and key == 0:
+                    Property._property[place].card()
+                    functions.text_in_box("Do you want to purchase %r ?"%Property._property[place].name,__font,orange,display_height/2,display_height/2 - blockh,display_height/2-card_length,display_height/2-card_length)
+                    Button("YES",display_height*3/4 - card_length/2-blockl,display_height*3/4 - card_length/2 + blockh/2,blockl/2,blockh,yellow,llblue,"yes",red)
+                    Button("NO",display_height*3/4 - card_length/2 + blockl/2,display_height*3/4 - card_length/2 + blockh/2,blockl/2,blockh,yellow,llblue,"no",red)
+                if key == 2:
+                    Property._property[place].card()
+                    functions.text_in_box("Successfully purchased %r"%(Property._property[place].name),__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+                    timer -= 1
+                    if timer == 0:
+                        key = 1
+                        timer = 8
+timerr = 8                        
+      
+def Chance():
+    global key,timer,incometax,gotojail,round_complete,cround,rent,railway,temporary,chance,timerr 
+    n = functions.a + functions.b
+    if n == 2:
+        if timerr == 8:
+            player.player[player_index].posx = display_height - card_length/2
+            player.player[player_index].posy = display_height - card_length/2
+            cround[player_index] = 40
+            round_complete = 1
+        functions.text_in_box("Go to our prime location GO and collect your reward money ;)",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+        timerr -= 1
+        if timerr == 0:
+            timerr = 8
+            chance = 0
+
+    if n == 3:
+        if timer == 8:
+            player.player[player_index].posx = card_length + card_breadth/2
+            player.player[player_index].posy = display_height - card_length/2
+            if cround[player_index]>9:
+                cround[player_index] = 49
+                round_complete = 1
+            else:
+                cround[player_index] = 9
+        functions.text_in_box("You are given a free trip to Beijing ,Enjoy the delight of it!",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+        working()
+        timer -= 1
+        if timer == 0:
+            timer = 8
+            chance = 0
+    if n == 4:
+        if timer == 8:
+            player.player[player_index].cash -= 10000
+            player.player[player_index].total_wealth -= 10000
+        functions.text_in_box("Oops! You broke the window of Mr. William's Car,Pay him $10000",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+        timer -= 1
+        if timer == 0:
+            timer = 8
+            chance = 0
+    if n == 5:
+        if timer == 8:
+            player.player[player_index].posx = display_height - card_length/2
+            player.player[player_index].posy = card_length/2
+            
+            cround[player_index] = 30
+            working()
+        functions.text_in_box("How Dare you burst crackers in front of parliament,living in India! Busted!!",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+        timer -= 1
+        if timer == 0:
+            timer = 8
+            chance = 0
+    if n == 6:
+        if timer == 8:
+            player.player[player_index].movement(37)
+            cround[player_index] = cround[player_index]%40
+            working()
+        functions.text_in_box("Earthquake expected! Go back three spaces",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+        timer -= 1
+        if timer == 0:
+            timer = 8
+            chance = 0            
+    if n == 7:
+        if timer == 8:
+            player.player[player_index].cash -= 30000
+            player.player[player_index].total_wealth -= 30000
+        functions.text_in_box("Its you birthday,Now give party to your friends...cost $30000",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+        timer -= 1
+        if timer == 0:
+            timer = 8
+            chance = 0
+    if n == 8:
+        if timer == 8:
+            player.player[player_index].cash += 40000
+            player.player[player_index].total_wealth += 40000
+        functions.text_in_box("Congo! You won lottery prize of $40000",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+        timer -= 1
+        if timer == 0:
+            timer = 8
+            chance = 0
+    if n == 9:
+        if timer == 8:
+            player.player[player_index].posx = card_length + card_breadth/2
+            player.player[player_index].posy = card_length/2
+            if cround[player_index]>21:
+                cround[player_index] = 61
+                round_complete = 1
+            else :
+                cround[player_index] = 21
+                
+        functions.text_in_box("You are given a free trip to Delhi ,Enjoy the delight of it!",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+        timer -= 1
+        if timer == 0:
+            timer = 8
+            chance = 0
+    if n == 10:
+        if timer == 8:
+            player.player[player_index].posx = card_length/2 
+            player.player[player_index].posy = display_height - card_length - 1.5*card_breadth
+            working()
+
+        functions.text_in_box("Go to Electric Company and feel the shock!",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+        timer -= 1
+        if timer == 0:
+            timer = 8
+            chance = 0
+    if n == 11:
+        if timer == 8:
+            player.player[player_index].cash += 30000
+            player.player[player_index].total_wealth += 30000
+        functions.text_in_box("You won the first prize as a hotel manager, collect $30000",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+        timer -= 1
+        if timer == 0:
+            timer = 8
+            chance = 0
+    if n == 12:
+        if timer == 8:
+            player.player[player_index].cash -= 20000
+            player.player[player_index].total_wealth -= 20000
+        functions.text_in_box("Smoking kills! clear your bills , pay $20000",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+        timer -= 1
+        if timer == 0:
+            timer = 8
+            chance = 0            
+def CommChest():
+    global key,timer,incometax,gotojail,round_complete,cround,rent,railway,temporary,chance,comm,timerr  
+    n = functions.a + functions.b
+    if n == 2:
+        if timerr == 8:
+            player.player[player_index].posx = display_height - card_length/2
+            player.player[player_index].posy = display_height - card_length/2
+            cround[player_index] = 40
+            round_complete = 1
+        functions.text_in_box("Go to our prime location GO and collect your reward money ;)",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+        timerr -= 1
+        if timerr == 0:
+            timerr = 8
+            comm = 0
+
+    if n == 3:
+        if timer == 8:
+            player.player[player_index].posx = card_length + card_breadth/2
+            player.player[player_index].posy = display_height - card_length/2
+            if cround[player_index]>9:
+                cround[player_index] = 49
+                round_complete = 1
+            else:
+                cround[player_index] = 9
+        functions.text_in_box("You are given a free trip to Beijing ,Enjoy the delight of it!",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+        working()
+        timer -= 1
+        if timer == 0:
+            timer = 8
+            comm = 0
+    if n == 4:
+        if timer == 8:
+            player.player[player_index].cash -= 10000
+            player.player[player_index].total_wealth -= 10000
+        functions.text_in_box("Oops! You broke the window of Mr. William's Car,Pay him $10000",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+        timer -= 1
+        if timer == 0:
+            timer = 8
+            comm = 0
+    if n == 5:
+        if timer == 8:
+            player.player[player_index].posx = display_height - card_length/2
+            player.player[player_index].posy = card_length/2
+            
+            cround[player_index] = 30
+            working()
+        functions.text_in_box("How Dare you burst crackers in front of parliament,living in India! Busted!!",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+        timer -= 1
+        if timer == 0:
+            timer = 8
+            comm = 0
+    if n == 6:
+        if timer == 8:
+            player.player[player_index].movement(37)
+            cround[player_index] = cround[player_index]%40
+            working()
+        functions.text_in_box("Earthquake expected! Go back three spaces",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+        timer -= 1
+        if timer == 0:
+            timer = 8
+            comm = 0            
+    if n == 7:
+        if timer == 8:
+            player.player[player_index].cash -= 30000
+            player.player[player_index].total_wealth -= 30000
+        functions.text_in_box("Its you birthday,Now give party to your friends...cost $30000",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+        timer -= 1
+        if timer == 0:
+            timer = 8
+            comm = 0
+    if n == 8:
+        if timer == 8:
+            player.player[player_index].cash += 40000
+            player.player[player_index].total_wealth += 40000
+        functions.text_in_box("Congo! You won lottery prize of $40000",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+        timer -= 1
+        if timer == 0:
+            timer = 8
+            comm = 0
+    if n == 9:
+        if timer == 8:
+            player.player[player_index].posx = card_length + card_breadth/2
+            player.player[player_index].posy = card_length/2
+            if cround[player_index]>21:
+                cround[player_index] = 61
+                round_complete = 1
+            else :
+                cround[player_index] = 21
+                
+        functions.text_in_box("You are given a free trip to Delhi ,Enjoy the delight of it!",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+        timer -= 1
+        if timer == 0:
+            timer = 8
+            comm = 0
+    if n == 10:
+        if timer == 8:
+            player.player[player_index].posx = card_length/2 
+            player.player[player_index].posy = display_height - card_length - 1.5*card_breadth
+            working()
+
+        functions.text_in_box("Go to Electric Company and feel the shock!",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+        timer -= 1
+        if timer == 0:
+            timer = 8
+            comm = 0
+    if n == 11:
+        if timer == 8:
+            player.player[player_index].cash += 30000
+            player.player[player_index].total_wealth += 30000
+        functions.text_in_box("You won the first prize as a hotel manager, collect $30000",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+        timer -= 1
+        if timer == 0:
+            timer = 8
+            comm = 0
+    if n == 12:
+        if timer == 8:
+            player.player[player_index].cash -= 20000
+            player.player[player_index].total_wealth -= 20000
+        functions.text_in_box("Smoking kills! clear your bills , pay $20000",__font,orange,display_height/2,display_height/2 ,display_height/2-card_length,display_height/2-card_length)
+        timer -= 1
+        if timer == 0:
+            timer = 8
+            comm = 0            
