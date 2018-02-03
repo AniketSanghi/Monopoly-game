@@ -1,6 +1,8 @@
 # Monopoly-game
 A monopoly game made with python
 
+ESC101A project with mentor as Kshiitiz Singhal under prof. Indranil Saha.
+
 This is a basic monopoly game made using pygame and tkinter libraries of python. It is a two player game with both player being manual. You have almost all features of monopoly game in it.
 
 #How To Run:
