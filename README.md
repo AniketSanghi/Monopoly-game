@@ -6,7 +6,16 @@ ESC101A project with mentor as Kshiitiz Singhal under prof. Indranil Saha.
 
 This is a basic monopoly game made using pygame and tkinter libraries of python. It is a two player game with both player being manual. You have almost all features of monopoly game in it.
 
-# Installation:
+
+<p align="center"><img src="https://user-images.githubusercontent.com/31285713/44485590-bb130780-a66e-11e8-9f29-60ffd5cfc812.gif" /></p>
+
+###### For full Video [Click here](https://www.facebook.com/aniket.sanghi.7/videos/1990737181169959/)
+
+---
+
+
+
+# Dependencies:
 
 - Python 3.6
 - Pygame 3.0
